@@ -88,15 +88,6 @@ Script chia dữ liệu theo `clip_ids` bằng `GroupShuffleSplit`, với mục 
 - Validation: 15%.
 - Test: 15%.
 
-Tỷ lệ thực tế và số lượng mẫu từng tập cần lấy từ log huấn luyện. Do chia theo nhóm clip, số mẫu cuối cùng có thể không đúng chính xác các tỷ lệ mục tiêu.
-
-- Nguồn dataset: **[CẦN BỔ SUNG]**
-- Số clip và số chuỗi: **[CẦN LẤY TỪ LOG/DATASET]**
-- Phân bố lớp: **[CẦN LẤY TỪ LOG]**
-- Điều kiện cấp phép/chia sẻ dữ liệu: **[CẦN XÁC MINH]**
-
-Dataset lớn được lưu ngoài GitHub. Cần bổ sung link tải, hướng dẫn truy cập, cấu trúc thư mục và checksum nếu nhóm có cung cấp.
-
 ## 5. Cấu hình huấn luyện trong `train_gru.py`
 
 Các giá trị được khai báo trong mã nguồn hiện có:
@@ -146,17 +137,55 @@ Nguồn tải artifact nếu không commit lên GitHub: **[CẦN BỔ SUNG LINK]
 
 ## 8. Kết quả đánh giá
 
-Không điền số liệu khi chưa xác minh log của lần huấn luyện được sử dụng cho checkpoint hiện tại.
+### 8.1. Thiết lập đánh giá
+
+Mô hình GRU được đánh giá trên tập kiểm thử gồm 321 mẫu thuộc ba lớp cử chỉ: Rock, Paper và Scissors.
+
+Các chỉ số được sử dụng gồm Test Loss, Accuracy, Precision, Recall, F1-score và Confusion Matrix. Mục đích là đánh giá khả năng phân loại của mô hình và xác định những cặp cử chỉ thường bị nhận diện nhầm.
+
+### 8.2. Kết quả tổng thể
 
 | Chỉ số | Kết quả |
-|---|---|
-| Test loss | [CẦN BỔ SUNG TỪ LOG] |
-| Test accuracy | [CẦN BỔ SUNG TỪ LOG] |
-| Precision / Recall / F1-score từng lớp | [CẦN BỔ SUNG TỪ CLASSIFICATION REPORT] |
-| Confusion matrix | [CẦN BỔ SUNG TỪ LOG] |
-| FPS/latency trên thiết bị mục tiêu | [CẦN ĐO THỰC TẾ] |
+|---|---:|
+| Số mẫu kiểm thử | 321 |
+| Test Loss (class-weighted) | 0.2567 |
+| Accuracy | 92.21% |
+| Macro F1-score | 92.03% |
+| Weighted F1-score | 92.09% |
 
-Khi báo cáo kết quả, cần ghi rõ phiên bản checkpoint, dataset/split được đánh giá, phần cứng, môi trường phần mềm và phương pháp đo. Không dùng accuracy trên train thay cho kết quả test.
+Accuracy đạt 92.21%, tương ứng với 296/321 mẫu được phân loại đúng trên tập kiểm thử.
+
+### 8.3. Kết quả theo từng lớp
+
+| Lớp | Precision | Recall | F1-score | Số mẫu |
+|---|---:|---:|---:|---:|
+| Rock | 91.67% | 97.06% | 94.29% | 102 |
+| Paper | 98.78% | 81.00% | 89.01% | 100 |
+| Scissors | 88.55% | 97.48% | 92.80% | 119 |
+| **Macro Average** | **93.00%** | **91.85%** | **92.03%** | **321** |
+| **Weighted Average** | **92.21%** | **92.21%** | **92.09%** | **321** |
+
+### 8.4. Confusion Matrix
+
+Bảng dưới đây thể hiện số lượng mẫu theo nhãn thực tế và nhãn dự đoán. Hàng là nhãn thực tế, cột là nhãn được mô hình dự đoán.
+
+| Nhãn thực tế \\ Dự đoán | Rock | Paper | Scissors |
+|---|---:|---:|---:|
+| Rock | 99 | 0 | 3 |
+| Paper | 7 | 81 | 12 |
+| Scissors | 2 | 1 | 116 |
+
+Các phần tử trên đường chéo chính là số mẫu được phân loại đúng. Những phần tử ngoài đường chéo thể hiện các trường hợp phân loại sai.
+
+### 8.5. Phân tích kết quả
+
+- **Rock:** Mô hình phân loại đúng 99/102 mẫu, đạt Recall 97.06%. Có 3 mẫu Rock bị dự đoán thành Scissors.
+- **Paper:** Mô hình phân loại đúng 81/100 mẫu, đạt Recall 81.00%. Có 7 mẫu Paper bị dự đoán thành Rock và 12 mẫu bị dự đoán thành Scissors.
+- **Scissors:** Mô hình phân loại đúng 116/119 mẫu, đạt Recall 97.48%. Có 2 mẫu bị dự đoán thành Rock và 1 mẫu bị dự đoán thành Paper.
+
+Paper là lớp cần ưu tiên cải thiện vì có Recall thấp nhất trong ba lớp. Cần kiểm tra các mẫu bị phân loại sai để xác định nguyên nhân, chẳng hạn đặc điểm landmark, sự khác biệt giữa người thực hiện cử chỉ hoặc chất lượng dữ liệu.
+
+Các kết quả cần được đối chiếu với phiên bản dataset, checkpoint và quy trình chia tập thực tế trước khi sử dụng làm kết quả báo cáo chính thức.
 
 ## 9. Giới hạn và hướng cải thiện
 

@@ -77,7 +77,13 @@ Nếu nhóm lưu các file này ngoài GitHub:
 3. Đặt đúng tên file như trên.
 4. Không đổi tên hoặc dùng metadata từ một model khác.
 
-Nguồn tải artifact: **[CẦN BỔ SUNG LINK VÀ QUYỀN TRUY CẬP]**.
+Các artifact của mô hình được lưu trực tiếp trong repository tại thư mục
+`checkpoints/`, bao gồm:
+
+- `checkpoints/tiny_gru_rps_best.pth`
+- `checkpoints/tiny_gru_rps_meta.pkl`
+
+Nếu hai file đã có sẵn trong repository, người dùng không cần tải riêng.
 
 Chỉ tải và nạp checkpoint/metadata từ nguồn đáng tin cậy. File `.pth` và `.pkl` có thể chứa dữ liệu tuần tự hóa; không nạp file không rõ nguồn gốc.
 
@@ -155,7 +161,18 @@ Demo vẫn có thể dùng CPU nếu bản PyTorch hiện tại không hỗ tr�
 
 ## 9. Ảnh/video minh họa
 
-Bổ sung ảnh chụp màn hình hoặc video demo tại đây sau khi chạy thử thành công.
+### 9.1. Ảnh chụp màn hình
 
-- Ảnh minh họa: `[CẦN BỔ SUNG]`
-- Video demo: `[CẦN BỔ SUNG LINK NẾU CÓ]`
+Ảnh minh họa giao diện ứng dụng nhận diện cử chỉ bàn tay
+trong thời gian thực bằng webcam.
+
+![Giao diện demo nhận diện Rock, Paper, Scissors](images/realtime-demo.png)
+
+### 9.2. Video demo
+
+Video minh họa quá trình chạy ứng dụng và nhận diện ba cử chỉ
+Rock, Paper và Scissors trong thời gian thực.
+
+- Video demo: https://drive.google.com/file/d/11CaMwiyFtmMeU3sWDpI56Mru-Y65wL6c/view?usp=drive_link
+
+

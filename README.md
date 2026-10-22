@@ -63,8 +63,6 @@ Rock-Paper-Sciccor-Gesture-/
     └── MODEL.md
 ```
 
-Đây là cấu trúc mục tiêu để tham khảo. Giữ các script hiện có trong repository; không cần xóa các phiên bản thử nghiệm chỉ để khớp cây thư mục minh họa. Hai file trong `checkpoints/` là các artifact mà script demo hiện tại yêu cầu. Nếu chúng không được lưu trong GitHub, hãy tải chúng từ nguồn được nhóm cung cấp và đặt đúng đường dẫn.
-
 ## 5. Cài đặt môi trường
 
 Yêu cầu hệ điều hành và phiên bản Python **cần được kiểm thử và xác nhận**. Script demo hiện dùng `cv2.CAP_DSHOW`, vì vậy hướng dẫn hiện tại nhắm đến Windows.
@@ -178,4 +176,4 @@ Kết quả cho thấy mô hình có khả năng phân loại tương đối t�
 - Thành viên/đóng góp: To Tran Gia Khang - Doan Minh Sang - Ly Nam Binh
 - License của mã nguồn: Không thêm license
 
-Không nên ghi một license nếu nhóm chưa xác định quyền sử dụng mã nguồn và dữ liệu.
+
