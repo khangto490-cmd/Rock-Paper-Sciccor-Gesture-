@@ -1,7 +1,0 @@
-numpy==2.5.2
-opencv-contrib-python==5.0.0.93
-mediapipe==1.1.0
-torch==2.6.0
-# Máy có GPU NVIDIA muốn dùng GPU, cài torch bản CUDA thay cho dòng trên:
-#   pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cu124
-# Không có GPU thì không cần làm gì thêm, demo tự chạy bằng CPU.
