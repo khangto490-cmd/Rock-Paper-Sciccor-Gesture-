@@ -119,11 +119,38 @@ Dataset huấn luyện lớn không được yêu cầu để chạy inference, 
 - **Nguồn tải dataset:** https://drive.google.com/drive/folders/1vuAldCAyX72r4UR-zXz7qcQGK3vYupPR?usp=drive_link
 - **Nguồn tải checkpoint và metadata nếu không commit lên GitHub:** https://drive.google.com/drive/folders/1sh1_35dJXXE0l2EuNpm3JRI3rZ28qKht?usp=drive_link
 
-Không đưa dữ liệu cá nhân, video có quyền riêng tư hoặc file lớn vào repository khi chưa kiểm tra quyền chia sẻ. Với file model lớn, cân nhắc Git LFS hoặc dịch vụ lưu trữ phù hợp.
 
-## 9. Đánh giá
+## 9. Đánh giá mô hình
 
-Không công bố accuracy, precision, recall, F1-score, FPS hoặc latency nếu chưa đo trên tập kiểm thử và môi trường được ghi nhận. Các kết quả sẽ được bổ sung tại [docs/MODEL.md](docs/MODEL.md) sau khi xác minh.
+Mô hình GRU được đánh giá trên tập kiểm thử gồm 321 mẫu, với ba lớp cử chỉ bàn tay: Rock (nắm tay), Paper (xòe bàn tay) và Scissors (giơ hai ngón tay).
+
+### 9.1. Kết quả tổng thể
+
+| Chỉ số | Kết quả |
+|---|---:|
+| Test Loss (độ lỗi trên tập kiểm thử) | 0.2567 |
+| Accuracy (độ chính xác) | 92.21% |
+| Macro F1-score | 92.03% |
+| Weighted F1-score | 92.09% |
+ 
+### 9.2. Kết quả theo từng lớp
+
+| Lớp cử chỉ | Precision | Recall | F1-score | Số mẫu |
+|---|---:|---:|---:|---:|
+| Rock | 91.67% | 97.06% | 94.29% | 102 |
+| Paper | 98.78% | 81.00% | 89.01% | 100 |
+| Scissors | 88.55% | 97.48% | 92.80% | 119 |
+
+### 9.3. Phân tích kết quả
+
+Mô hình đạt độ chính xác 92.21% trên tập kiểm thử được sử dụng trong lần đánh giá này.
+
+- **Rock:** Đạt Recall 97.06%, cho thấy mô hình nhận diện đúng phần lớn các mẫu Rock trong tập kiểm thử.
+- **Paper:** Đạt Precision 98.78% nhưng Recall là 81.00%. Điều này cho thấy các dự đoán Paper thường chính xác, tuy nhiên mô hình vẫn bỏ sót một số mẫu Paper và phân loại chúng thành các lớp khác.
+- **Scissors:** Đạt Recall 97.48%, cho thấy mô hình nhận diện đúng phần lớn các mẫu Scissors trong tập kiểm thử.
+
+Kết quả cho thấy mô hình có khả năng phân loại tương đối tốt trên tập dữ liệu được đánh giá. Tuy nhiên, cần tiếp tục kiểm thử với webcam trong các điều kiện thực tế khác nhau để đánh giá độ ổn định khi sử dụng sản phẩm.
+
 
 ## 10. Giới hạn đã biết
 
