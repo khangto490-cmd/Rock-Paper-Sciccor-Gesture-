@@ -1,0 +1,8 @@
+numpy
+opencv-python
+mediapipe
+torch
+scikit-learn
+joblib
+
+python -m pip freeze > requirements.txt
