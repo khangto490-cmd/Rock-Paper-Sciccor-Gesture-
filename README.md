@@ -1,67 +1,155 @@
-# Rock-Paper-Scissors Hand Gesture Recognition
+# Rock-Paper-Sciccor-Gesture-
 
-## 1. Project Overview
+Dự án nhận diện cử chỉ bàn tay **Rock – Paper – Scissors (Kéo – Búa – Bao)** bằng webcam. Hệ thống sử dụng MediaPipe Hands để phát hiện các điểm mốc bàn tay và mô hình TinyGRU để phân loại chuỗi đặc trưng theo thời gian.
 
-Dự án xây dựng hệ thống nhận diện cử chỉ bàn tay để phân loại ba hành động: Rock, Paper và Scissors. Hệ thống sử dụng camera để thu nhận hình ảnh bàn tay, trích xuất đặc trưng và dự đoán cử chỉ theo thời gian thực.
+> **Trạng thái tài liệu:** Nội dung được soạn dựa trên mã nguồn `realtime_gru_game_v7_2_balanced.py` và `train_gru.py`. Các phiên bản thư viện, nguồn tải dữ liệu/checkpoint và kết quả đánh giá chưa được xác minh sẽ được đánh dấu rõ bên dưới.
 
-## 2. Main Features
+## 1. Chức năng chính
 
-- Nhận diện cử chỉ bàn tay từ webcam.
-- Phân loại Rock, Paper và Scissors.
-- Xử lý chuỗi dữ liệu theo thời gian nếu sử dụng mô hình GRU.
-- Hiển thị kết quả nhận diện trực tiếp trên màn hình.
-- Ghi nhận kết quả và hỗ trợ đánh giá mô hình.
+- Thu nhận hình ảnh trực tiếp từ webcam.
+- Phát hiện một bàn tay và trích xuất 21 landmarks bằng MediaPipe Hands.
+- Chuẩn hóa landmarks thành vector đặc trưng 63 chiều cho mỗi frame.
+- Sử dụng TinyGRU để phân loại chuỗi đặc trưng thành Rock, Paper hoặc Scissors.
+- Kết hợp dự đoán từ nhiều cửa sổ thời gian, ngưỡng confidence và kiểm tra độ ổn định trước khi chốt kết quả.
+- Hiển thị kết quả nhận diện và nước đi đối kháng trên cửa sổ demo.
 
-## 3. System Architecture
+## 2. Luồng xử lý
 
-Camera Input → Hand Landmark Detection → Feature Preprocessing → Gesture Classification → Prediction Filtering → Display Result
-
-## 4. Model Information
-
-- Hand landmark detector: MediaPipe Hands.
-- Gesture classification model: [Điền đúng model được sử dụng trong phiên bản demo].
-- Input representation: [Điền đặc trưng đầu vào thực tế].
-- Output classes: Rock, Paper, Scissors.
-
-Chi tiết xem tại [Model Documentation](docs/MODEL.md).
-
-## 5. Installation
-
-Yêu cầu Python: [Điền phiên bản Python đã kiểm thử].
-
-```bash
-python -m venv .venv
+```text
+Webcam
+  ↓
+MediaPipe Hands — phát hiện 21 landmarks
+  ↓
+Chuẩn hóa tọa độ bàn tay và tạo vector 63 đặc trưng
+  ↓
+Buffer chuỗi theo thời gian
+  ↓
+Nội suy thời gian + chuẩn hóa bằng mean/std từ lúc huấn luyện
+  ↓
+TinyGRU
+  ↓
+Kết hợp xác suất từ các cửa sổ chồng lấp
+  ↓
+Kiểm tra confidence và độ ổn định
+  ↓
+Hiển thị kết quả trò chơi
 ```
 
-Windows:
+## 3. Công nghệ
+
+| Thành phần | Công nghệ |
+|---|---|
+| Camera và xử lý ảnh | OpenCV |
+| Phát hiện bàn tay | MediaPipe Hands |
+| Trích xuất đặc trưng | 21 landmarks × 3 tọa độ = 63 giá trị/frame |
+| Mô hình phân loại | TinyGRU được triển khai bằng PyTorch |
+| Lưu metadata | Joblib |
+| Huấn luyện và đánh giá | PyTorch, NumPy, scikit-learn |
+
+## 4. Cấu trúc repository
+
+```text
+Rock-Paper-Sciccor-Gesture-/
+├── README.md
+├── requirements.txt
+├── realtime_gru_game_v7_2_balanced.py
+├── train_gru.py
+├── build_gru_dataset.py
+├── checkpoints/
+│   ├── tiny_gru_rps_best.pth
+│   └── tiny_gru_rps_meta.pkl
+└── docs/
+    ├── DEMO.md
+    └── MODEL.md
+```
+
+Đây là cấu trúc mục tiêu để tham khảo. Giữ các script hiện có trong repository; không cần xóa các phiên bản thử nghiệm chỉ để khớp cây thư mục minh họa. Hai file trong `checkpoints/` là các artifact mà script demo hiện tại yêu cầu. Nếu chúng không được lưu trong GitHub, hãy tải chúng từ nguồn được nhóm cung cấp và đặt đúng đường dẫn.
+
+## 5. Cài đặt môi trường
+
+Yêu cầu hệ điều hành và phiên bản Python **cần được kiểm thử và xác nhận**. Script demo hiện dùng `cv2.CAP_DSHOW`, vì vậy hướng dẫn hiện tại nhắm đến Windows.
+
+Tạo môi trường ảo tại thư mục gốc repository:
 
 ```powershell
+python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## 6. Run the Demo
+`requirements.txt` hiện liệt kê các thư viện trực tiếp mà mã nguồn sử dụng, chưa khóa phiên bản. Sau khi kiểm thử thành công trên một môi trường sạch, hãy ghi lại các phiên bản đã kiểm thử để tăng khả năng tái lập.
 
-Xem hướng dẫn chi tiết tại [DEMO.md](docs/DEMO.md).
+PyTorch có thể chạy trên CPU hoặc GPU tùy bản cài đặt và phần cứng. Nếu cần GPU NVIDIA, cài bản PyTorch tương thích theo hướng dẫn chính thức của PyTorch, sau đó xác minh bằng:
 
-## 7. Project Documentation
+```powershell
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+```
 
-- [Demo Guide](docs/DEMO.md)
-- [Model Documentation](docs/MODEL.md)
-- [System Architecture](docs/ARCHITECTURE.md)
+## 6. Chạy demo
 
-## 8. References
+Đảm bảo hai file sau tồn tại:
 
-Liệt kê các bài báo, tài liệu chính thức và nguồn kỹ thuật được sử dụng trong quá trình phát triển.
+- `checkpoints/tiny_gru_rps_best.pth`
+- `checkpoints/tiny_gru_rps_meta.pkl`
 
-## 9. Limitations
+Chạy lệnh từ **thư mục gốc repository**:
 
-- Kết quả nhận diện phụ thuộc vào ánh sáng, góc camera và cách thực hiện cử chỉ.
-- Độ chính xác cần được đánh giá trên dữ liệu kiểm thử phù hợp.
-- Các trường hợp cử chỉ ngoài ba lớp mục tiêu cần được kiểm tra riêng.
+```powershell
+python realtime_gru_game_v7_2_balanced.py
+```
 
-## 10. License and Contributions
+Phím điều khiển:
 
-[Điền giấy phép sử dụng và thông tin đóng góp nếu có.]
+- `SPACE`: bắt đầu ván mới.
+- `ESC`: thoát chương trình.
 
+Hướng dẫn chi tiết và xử lý lỗi: [docs/DEMO.md](docs/DEMO.md).
+
+## 7. Thông tin mô hình
+
+Mô hình phân loại là **TinyGRU**. Đầu vào của mỗi frame là vector 63 đặc trưng từ landmarks đã được chuyển sang hệ tọa độ cục bộ và chuẩn hóa. GRU xử lý chuỗi theo thời gian; lớp tuyến tính cuối tạo logits cho các lớp cử chỉ.
+
+Các tham số `window_size`, `input_size`, `hidden_size`, danh sách nhãn và thống kê `feature_mean`/`feature_std` được đọc từ file metadata. Chi tiết: [docs/MODEL.md](docs/MODEL.md).
+
+## 8. Dữ liệu và model artifacts
+
+Dataset huấn luyện lớn không được yêu cầu để chạy inference, nhưng cần có khi huấn luyện lại mô hình. Dataset được lưu bên ngoài GitHub.
+
+- **Nguồn tải dataset:** `[CẦN BỔ SUNG LINK / HƯỚNG DẪN TRUY CẬP]`
+- **Nguồn tải checkpoint và metadata nếu không commit lên GitHub:** `[CẦN BỔ SUNG LINK]`
+- **Giấy phép và điều kiện sử dụng dữ liệu:** `[CẦN KIỂM TRA VÀ BỔ SUNG]`
+
+Không đưa dữ liệu cá nhân, video có quyền riêng tư hoặc file lớn vào repository khi chưa kiểm tra quyền chia sẻ. Với file model lớn, cân nhắc Git LFS hoặc dịch vụ lưu trữ phù hợp.
+
+## 9. Đánh giá
+
+Không công bố accuracy, precision, recall, F1-score, FPS hoặc latency nếu chưa đo trên tập kiểm thử và môi trường được ghi nhận. Các kết quả sẽ được bổ sung tại [docs/MODEL.md](docs/MODEL.md) sau khi xác minh.
+
+## 10. Giới hạn đã biết
+
+- Hệ thống hiện được thiết kế cho một bàn tay và ba lớp Rock, Paper, Scissors.
+- Mô hình luôn tạo xác suất trên các lớp đã huấn luyện; ngưỡng confidence giúp yêu cầu thử lại nhưng không tự động tạo ra một lớp `unknown` đã được huấn luyện.
+- Kết quả có thể bị ảnh hưởng bởi ánh sáng, góc bàn tay, che khuất, khoảng cách camera và cử chỉ ngoài phân phối dữ liệu huấn luyện.
+- Ngưỡng confidence và các tham số ổn định trong demo là cấu hình triển khai; không thay thế cho đánh giá độ chính xác trên dữ liệu độc lập.
+
+## 11. Tài liệu
+
+- [Hướng dẫn chạy demo](docs/DEMO.md)
+- [Tài liệu mô hình và huấn luyện](docs/MODEL.md)
+
+## 12. Tài liệu tham khảo
+
+- Zhang et al., *MediaPipe Hands: On-device Real-time Hand Tracking* (2020): https://arxiv.org/abs/2006.10214
+- MediaPipe Hand Landmarker documentation: https://developers.google.com/edge/mediapipe/solutions/vision/hand_landmarker
+- PyTorch `torch.nn.GRU`: https://docs.pytorch.org/docs/stable/generated/torch.nn.GRU.html
+- OpenCV `VideoCapture`: https://docs.opencv.org/4.x/d8/dfe/classcv_1_1VideoCapture.html
+- scikit-learn `classification_report`: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html
+- scikit-learn `confusion_matrix`: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+
+## 13. Đóng góp và giấy phép
+
+- Thành viên/đóng góp: `[CẦN BỔ SUNG]`
+- License của mã nguồn: `[CẦN CHỌN VÀ BỔ SUNG]`
+
+Không nên ghi một license nếu nhóm chưa xác định quyền sử dụng mã nguồn và dữ liệu.

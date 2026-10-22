@@ -1,8 +1,14 @@
+# Runtime dependencies used by realtime_gru_game_v7_2_balanced.py
 numpy
 opencv-python
 mediapipe
 torch
-scikit-learn
 joblib
 
-python -m pip freeze > requirements.txt
+# Training/evaluation dependencies used by train_gru.py
+scikit-learn
+
+# NOTE:
+# Versions are intentionally not pinned because the exact working versions
+# have not yet been verified in a clean environment.
+# After testing, record the Python version and freeze compatible dependencies.
