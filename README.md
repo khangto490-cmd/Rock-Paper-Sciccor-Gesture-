@@ -116,9 +116,8 @@ Các tham số `window_size`, `input_size`, `hidden_size`, danh sách nhãn và 
 
 Dataset huấn luyện lớn không được yêu cầu để chạy inference, nhưng cần có khi huấn luyện lại mô hình. Dataset được lưu bên ngoài GitHub.
 
-- **Nguồn tải dataset:** `[CẦN BỔ SUNG LINK / HƯỚNG DẪN TRUY CẬP]`
-- **Nguồn tải checkpoint và metadata nếu không commit lên GitHub:** `[CẦN BỔ SUNG LINK]`
-- **Giấy phép và điều kiện sử dụng dữ liệu:** `[CẦN KIỂM TRA VÀ BỔ SUNG]`
+- **Nguồn tải dataset:** https://drive.google.com/drive/folders/1vuAldCAyX72r4UR-zXz7qcQGK3vYupPR?usp=drive_link
+- **Nguồn tải checkpoint và metadata nếu không commit lên GitHub:** https://drive.google.com/drive/folders/1sh1_35dJXXE0l2EuNpm3JRI3rZ28qKht?usp=drive_link
 
 Không đưa dữ liệu cá nhân, video có quyền riêng tư hoặc file lớn vào repository khi chưa kiểm tra quyền chia sẻ. Với file model lớn, cân nhắc Git LFS hoặc dịch vụ lưu trữ phù hợp.
 
