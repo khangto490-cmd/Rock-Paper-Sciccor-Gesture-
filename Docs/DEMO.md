@@ -4,7 +4,7 @@ Tài liệu này hướng dẫn cài đặt và chạy `realtime_gru_game_v7_2_b
 
 ## 1. Điều kiện trước khi chạy
 
-- Python: **[CẦN XÁC NHẬN PHIÊN BẢN ĐÃ KIỂM THỬ]**
+- Python: 3.11.16
 - Webcam được Windows nhận diện.
 - Các thư viện trong `requirements.txt`.
 - Hai artifact của mô hình:
