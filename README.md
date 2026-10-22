@@ -143,9 +143,6 @@ Với `model_complexity=0`, tốc độ chạm trần 30 FPS của webcam; tối
 - Ito, Sueishi, Yamakawa, Ishikawa. *Tracking and Recognition of a Human Hand in Dynamic Motion for Janken (rock–paper–scissors) Robot.* IEEE CASE 2016.
 - Google MediaPipe Hands: https://developers.google.com/mediapipe
 
-## Tác giả
-
-`<Họ tên> – <mã sinh viên / trường, nếu muốn>`
 
 ## Giấy phép
 
