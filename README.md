@@ -149,7 +149,7 @@ Không công bố accuracy, precision, recall, F1-score, FPS hoặc latency nế
 
 ## 13. Đóng góp và giấy phép
 
-- Thành viên/đóng góp: `[CẦN BỔ SUNG]`
-- License của mã nguồn: `[CẦN CHỌN VÀ BỔ SUNG]`
+- Thành viên/đóng góp: To Tran Gia Khang - Doan Minh Sang - Ly Nam Binh
+- License của mã nguồn: Không thêm license
 
 Không nên ghi một license nếu nhóm chưa xác định quyền sử dụng mã nguồn và dữ liệu.
