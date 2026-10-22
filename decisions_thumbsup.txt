@@ -1,0 +1,31 @@
+﻿[DECISION] scissors 0.98 probs=[0.011 0.012 0.977] gate=OK | idx 2.02 | mid 2.11 | ring 0.84 | pky 0.79 | thumb 0.43
+[DECISION] rock 0.98 probs=[0.982 0.009 0.009] gate=OK | idx 0.82 | mid 0.74 | ring 0.69 | pky 0.71 | thumb 0.46
+[DECISION] rock 0.98 probs=[0.982 0.009 0.01 ] gate=OK | idx 0.84 | mid 0.77 | ring 0.67 | pky 0.69 | thumb 0.50
+[DECISION] paper 0.98 probs=[0.003 0.978 0.018] gate=OK | idx 2.01 | mid 2.07 | ring 2.06 | pky 1.75 | thumb 0.76
+[DECISION] paper 0.98 probs=[0.003 0.982 0.015] gate=OK | idx 1.99 | mid 2.03 | ring 2.01 | pky 1.74 | thumb 0.83
+[DECISION] rock 0.98 probs=[0.981 0.009 0.01 ] gate=OK | idx 0.84 | mid 0.75 | ring 0.66 | pky 0.68 | thumb 0.45
+[DECISION] rock 0.99 probs=[0.989 0.006 0.005] gate=OK | idx 0.81 | mid 0.73 | ring 0.73 | pky 0.78 | thumb 0.30
+[DECISION] scissors 0.98 probs=[0.013 0.008 0.979] gate=OK | idx 1.84 | mid 1.96 | ring 0.96 | pky 0.98 | thumb 0.51
+[DECISION] scissors 0.98 probs=[0.012 0.009 0.979] gate=OK | idx 1.87 | mid 1.98 | ring 0.96 | pky 0.91 | thumb 0.67
+[DECISION] paper 0.99 probs=[0.005 0.989 0.006] gate=OK | idx 1.99 | mid 2.10 | ring 2.07 | pky 1.87 | thumb 1.03
+[DECISION] paper 0.99 probs=[0.004 0.99  0.006] gate=OK | idx 1.95 | mid 2.07 | ring 2.09 | pky 1.89 | thumb 1.15
+[DECISION] scissors 0.97 probs=[0.013 0.015 0.973] gate=OK | idx 1.95 | mid 2.02 | ring 0.82 | pky 0.95 | thumb 0.47
+[DECISION] scissors 0.97 probs=[0.015 0.016 0.969] gate=OK | idx 1.88 | mid 2.11 | ring 0.86 | pky 0.95 | thumb 0.56
+[DECISION] scissors 0.97 probs=[0.01  0.015 0.975] gate=OK | idx 1.96 | mid 2.18 | ring 0.88 | pky 0.93 | thumb 0.60
+[DECISION] scissors 0.97 probs=[0.011 0.016 0.973] gate=OK | idx 1.99 | mid 2.19 | ring 0.89 | pky 0.94 | thumb 0.64
+[DECISION] paper 0.99 probs=[0.006 0.988 0.007] gate=OK | idx 1.94 | mid 1.96 | ring 2.10 | pky 1.95 | thumb 1.20
+[DECISION] paper 0.99 probs=[0.007 0.987 0.006] gate=OK | idx 1.95 | mid 2.01 | ring 2.11 | pky 1.96 | thumb 1.30
+[DECISION] rock 0.98 probs=[0.977 0.009 0.015] gate=OK | idx 1.02 | mid 0.84 | ring 0.82 | pky 0.76 | thumb 0.46
+[DECISION] rock 0.98 probs=[0.977 0.012 0.011] gate=OK | idx 0.96 | mid 0.83 | ring 0.82 | pky 0.79 | thumb 0.35
+[DECISION] rock 0.97 probs=[0.973 0.016 0.012] gate=OK | idx 1.07 | mid 0.85 | ring 0.87 | pky 0.83 | thumb 0.42
+[DECISION] scissors 0.98 probs=[0.011 0.013 0.976] gate=OK | idx 1.92 | mid 2.12 | ring 0.87 | pky 0.94 | thumb 0.73
+[DECISION] scissors 0.98 probs=[0.011 0.012 0.978] gate=OK | idx 1.84 | mid 2.02 | ring 0.82 | pky 0.87 | thumb 0.73
+[DECISION] scissors 0.98 probs=[0.01  0.012 0.978] gate=OK | idx 1.91 | mid 2.05 | ring 0.84 | pky 0.90 | thumb 0.70
+[DECISION] paper 0.99 probs=[0.007 0.986 0.007] gate=OK | idx 1.93 | mid 1.97 | ring 2.06 | pky 1.91 | thumb 1.26
+[DECISION] paper 0.99 probs=[0.006 0.987 0.007] gate=OK | idx 1.92 | mid 1.99 | ring 2.05 | pky 1.90 | thumb 1.26
+[DECISION] paper 0.99 probs=[0.006 0.987 0.007] gate=OK | idx 1.91 | mid 1.99 | ring 2.06 | pky 1.91 | thumb 1.22
+[DECISION] paper 0.99 probs=[0.006 0.987 0.007] gate=OK | idx 1.91 | mid 2.02 | ring 2.07 | pky 1.91 | thumb 1.22
+[DECISION] scissors 0.98 probs=[0.009 0.011 0.979] gate=OK | idx 1.97 | mid 2.12 | ring 0.80 | pky 0.88 | thumb 0.79
+[DECISION] rock 0.98 probs=[0.978 0.011 0.01 ] gate=OK | idx 0.99 | mid 0.87 | ring 0.88 | pky 0.85 | thumb 0.40
+[DECISION] paper 0.99 probs=[0.006 0.987 0.007] gate=OK | idx 1.99 | mid 2.08 | ring 2.10 | pky 1.94 | thumb 1.31
+[DECISION] scissors 0.98 probs=[0.011 0.01  0.978] gate=OK | idx 1.91 | mid 2.09 | ring 0.78 | pky 0.85 | thumb 0.80
