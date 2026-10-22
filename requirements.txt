@@ -1,12 +1,12 @@
 # Runtime dependencies used by realtime_gru_game_v7_2_balanced.py
-numpy
-opencv-python
+numpy = 2.1.3
+opencv-python =  5.0.0.93
 mediapipe
-torch
-joblib
+torch = 2.11.0+cu128
+joblib = 1.5.3
 
 # Training/evaluation dependencies used by train_gru.py
-scikit-learn
+scikit-learn = 1.7.2
 
 # NOTE:
 # Versions are intentionally not pinned because the exact working versions
