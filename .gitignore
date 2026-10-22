@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments and local settings
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# Generated datasets and trained models
+/sequences/
+/frame_dataset*.csv
+/ket_qua_so_sanh.csv
+/static_model*.pkl
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
