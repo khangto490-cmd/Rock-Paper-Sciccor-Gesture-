@@ -1,0 +1,7 @@
+numpy==2.5.2
+opencv-contrib-python==5.0.0.93
+mediapipe==1.1.0
+torch==2.6.0
+torchvision==0.21.0
+# Bản CUDA của torch: pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+# Thêm các thư viện khác mà notebook có import (pandas, matplotlib, scikit-learn, ...)
