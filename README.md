@@ -144,7 +144,3 @@ Với `model_complexity=0`, tốc độ chạm trần 30 FPS của webcam; tối
 - Google MediaPipe Hands: https://developers.google.com/mediapipe
 
 
-## Giấy phép
-
-`<Chọn giấy phép, ví dụ MIT, hoặc bỏ mục này>`
-
