@@ -1,0 +1,30 @@
+GRU Model Evaluation
+Timestamp: 2026-10-22T16:45:44
+Dataset: gru_dataset.npz
+Checkpoint: checkpoints\tiny_gru_rps_best.pth
+Device: cuda
+Total dataset samples: 1711
+Train split samples: 1121
+Test split samples: 321
+Test loss (class-weighted): 0.256678
+Test accuracy: 0.922118 (92.21%)
+
+Classification report:
+              precision    recall  f1-score   support
+
+        rock     0.9167    0.9706    0.9429       102
+       paper     0.9878    0.8100    0.8901       100
+    scissors     0.8855    0.9748    0.9280       119
+
+    accuracy                         0.9221       321
+   macro avg     0.9300    0.9185    0.9203       321
+weighted avg     0.9273    0.9221    0.9209       321
+
+Confusion matrix (rows=true labels, columns=predicted labels):
+[[ 99   0   3]
+ [  7  81  12]
+ [  2   1 116]]
+
+Class order: rock, paper, scissors
+
+Validity note: results are valid for this checkpoint only if gru_dataset.npz is the same dataset version used to train it.
