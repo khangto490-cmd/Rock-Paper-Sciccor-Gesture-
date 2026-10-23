@@ -247,6 +247,7 @@ prepare_started = time.perf_counter()
 
 def infer_probs_batch(sequences):
     """Chạy nhiều window trong một forward pass thay vì gọi GRU nhiều lần."""
+    prepare_started = time.perf_counter()
     prepared = []
 
     for sequence in sequences:
