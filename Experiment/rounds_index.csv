@@ -1,0 +1,15 @@
+person,session,attempt,gesture,side_cue,hand_cue,valid,reason,entry_side_raw,n_frames,n_detected,duration_s,mp_majority_label,file
+hi,20261024_121005,1,keo,trai,phai,True,ok,right,67,27,2.224,Left,person_hi\session_20261024_121005\r0001_keo_trai_phai.npz
+hi,20261024_121005,2,bao,trai,trai,False,tay da o trong o luc bat dau,,35,1,1.165,Right,person_hi\session_20261024_121005\r0002_bao_trai_trai_invalid.npz
+hi,20261024_121005,3,keo,trai,trai,True,ok,right,128,30,4.272,Right,person_hi\session_20261024_121005\r0003_keo_trai_trai.npz
+hi,20261024_121005,4,bua,trai,trai,True,ok,right,96,25,3.2,Right,person_hi\session_20261024_121005\r0004_bua_trai_trai.npz
+hi,20261024_121005,5,bua,trai,phai,True,ok,right,65,29,2.152,Left,person_hi\session_20261024_121005\r0005_bua_trai_phai.npz
+hi,20261024_121005,6,bao,trai,phai,True,ok,right,116,27,3.856,Left,person_hi\session_20261024_121005\r0006_bao_trai_phai.npz
+hi,20261024_121005,7,bua,trai,phai,False,tay da o trong o luc bat dau,,47,1,1.609,Left,person_hi\session_20261024_121005\r0007_bua_trai_phai_invalid.npz
+hi,20261024_121005,8,keo,trai,phai,True,ok,right,154,27,5.126,Left,person_hi\session_20261024_121005\r0008_keo_trai_phai.npz
+hi,20261024_121005,9,bua,trai,trai,True,ok,right,126,31,4.184,Right,person_hi\session_20261024_121005\r0009_bua_trai_trai.npz
+hi,20261024_121005,10,keo,trai,trai,True,ok,right,121,31,4.028,Right,person_hi\session_20261024_121005\r0010_keo_trai_trai.npz
+hi,20261024_121005,11,bao,trai,trai,True,ok,right,140,30,4.655,Right,person_hi\session_20261024_121005\r0011_bao_trai_trai.npz
+hi,20261024_121005,12,bao,trai,phai,True,ok,right,72,33,2.403,Left,person_hi\session_20261024_121005\r0012_bao_trai_phai.npz
+hi,20261024_121005,13,bao,trai,trai,True,ok,right,69,30,2.283,Right,person_hi\session_20261024_121005\r0013_bao_trai_trai.npz
+hi,20261024_121005,14,bua,trai,phai,True,ok,right,58,35,1.919,Left,person_hi\session_20261024_121005\r0014_bua_trai_phai.npz
