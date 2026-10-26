@@ -156,6 +156,11 @@ Kết quả cho thấy mô hình có khả năng phân loại tương đối t�
 - Mô hình luôn tạo xác suất trên các lớp đã huấn luyện; ngưỡng confidence giúp yêu cầu thử lại nhưng không tự động tạo ra một lớp `unknown` đã được huấn luyện.
 - Kết quả có thể bị ảnh hưởng bởi ánh sáng, góc bàn tay, che khuất, khoảng cách camera và cử chỉ ngoài phân phối dữ liệu huấn luyện.
 - Ngưỡng confidence và các tham số ổn định trong demo là cấu hình triển khai; không thay thế cho đánh giá độ chính xác trên dữ liệu độc lập.
+- *Thử nghiệm giảm nhận diện nhầm: Trong quá trình kiểm thử webcam, hệ thống đôi khi nhận diện cử chỉ Like (Thumbs-up) thành Rock. Ngoài ra, kết quả nhận diện có thể không ổn định khi thay đổi tay thực hiện cử chỉ hoặc góc bàn tay.
+
+- Phân tích Geometry Gate: File `gesture_gate_diagnostic.py` được phát triển để khảo sát thêm các đặc trưng hình học của ngón cái, bao gồm `thumb_angle`, `thumb_axis_proj` và `thumb_lateral`, nhằm tìm cách phân biệt Rock với các cử chỉ ngoài tập huấn luyện. Phiên bản này phục vụ thử nghiệm và không được sử dụng trong demo chính thức.
+
+- Hướng cải tiến: Tiếp tục kiểm thử với cả tay trái và tay phải, bổ sung các mẫu cử chỉ ngoài tập mục tiêu và đánh giá các điều kiện hình học trước khi tích hợp chúng vào Geometry Gate chính thức.
 
 ## 11. Tài liệu
 
