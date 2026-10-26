@@ -33,7 +33,7 @@ def gate_stats(frames):
         dtype=np.float32,
     )
     thumb = float(np.linalg.norm(pts[4] - pts[5]))
-    return ext, thumb
+    return bool((st == 0).all() and thumb <= THUMB_MAX)
 
 
 def _states(ext):
