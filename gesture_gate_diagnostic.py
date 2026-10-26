@@ -103,14 +103,40 @@ def describe(ext, thumb, frames=None):
     return text
 
 
+
 def gate_check(frames, label):
-    """Returns (ok, info). Extra thumb metrics are logging-only, not decision rules."""
+    """Check gesture geometry and reject suspected Like when predicted as Rock."""
     frames = list(frames)[-GATE_FRAMES:]
     if not frames:
         return False, "no frames"
+
     ext, thumb = gate_stats(frames)
-    # Keep matches() and all acceptance thresholds unchanged for a fair comparison.
-    return matches(label, ext, thumb), describe(ext, thumb, frames)
+
+    # Keep the existing gate decision as the baseline.
+    ok = matches(label, ext, thumb)
+
+    # Read the additional thumb features.
+    thumb_dist, thumb_angle, thumb_axis_proj, thumb_lateral = (
+        thumb_diagnostics(frames)
+    )
+
+    # Experimental Like rejection rule: only applies to Rock.
+    suspected_like = (
+        thumb_lateral > 0.70
+        and thumb_dist > 0.65
+        and thumb_angle < 55.0
+    )
+
+    if label.lower() == "rock" and suspected_like:
+        ok = False
+
+    info = describe(ext, thumb, frames)
+
+    if label.lower() == "rock" and suspected_like:
+        info += " | SUSPECTED LIKE"
+
+    return ok, info
+
 
 
 if __name__ == "__main__":  # offline sanity check on the training windows
