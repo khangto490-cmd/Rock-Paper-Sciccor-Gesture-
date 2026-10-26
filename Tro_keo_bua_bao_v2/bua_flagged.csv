@@ -1,0 +1,11 @@
+file,hand,category,ext_keo_at_entry,ext_bao_at_entry,high_run_frames,open_from_first_frame,hand_touches_border,ms_open_after_entry,end_ext_keo,end_ext_bao
+r0001_bua_trai_phai.npz,phai,B dot bien ngan,1.74,1.6,2,False,False,63.0,0.94,0.79
+r0036_bua_trai_phai.npz,phai,C mo suot van,1.97,1.9,35,True,False,,1.86,1.79
+r0047_bua_trai_phai.npz,phai,C mo suot van,1.9,1.79,53,True,True,,1.86,1.75
+r0055_bua_trai_phai.npz,phai,C mo suot van,1.88,1.76,33,True,False,,1.79,1.69
+r0065_bua_trai_phai.npz,phai,C mo suot van,1.95,1.85,36,True,False,,1.75,1.66
+r0070_bua_trai_phai.npz,phai,C mo suot van,1.88,1.78,32,True,False,,1.82,1.72
+r0075_bua_trai_phai.npz,phai,A mo roi nam,1.96,1.84,14,True,False,278.0,1.07,0.87
+r0079_bua_trai_phai.npz,phai,A mo roi nam,1.84,1.77,34,True,False,705.0,0.96,0.86
+r0089_bua_trai_phai.npz,phai,A mo roi nam,1.47,1.38,6,False,False,206.0,0.95,0.8
+r0109_bua_trai_phai.npz,phai,A mo roi nam,1.69,1.55,5,False,False,111.0,0.96,0.8
