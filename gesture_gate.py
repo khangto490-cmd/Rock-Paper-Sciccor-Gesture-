@@ -25,15 +25,25 @@ _NAMES = ("idx", "mid", "ring", "pky")
 def gate_stats(frames):
     """frames: sequence of flattened (63,) features. Returns (ext[4], thumb)."""
     pts = np.median(
-        np.stack([np.asarray(f, dtype=np.float32).reshape(21, 3) for f in frames]),
+        np.stack([
+            np.asarray(f, dtype=np.float32).reshape(21, 3)
+            for f in frames
+        ]),
         axis=0,
     )
+
     ext = np.array(
-        [np.linalg.norm(pts[tip]) / (np.linalg.norm(pts[mcp]) + 1e-6) for mcp, tip in _FINGERS],
+        [
+            np.linalg.norm(pts[tip]) /
+            (np.linalg.norm(pts[mcp]) + 1e-6)
+            for mcp, tip in _FINGERS
+        ],
         dtype=np.float32,
     )
+
     thumb = float(np.linalg.norm(pts[4] - pts[5]))
-    return bool((st == 0).all() and thumb <= THUMB_MAX)
+
+    return ext, thumb
 
 
 def _states(ext):
