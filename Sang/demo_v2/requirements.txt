@@ -1,0 +1,9 @@
+# Đã chạy thử với Python 3.13.5: mediapipe 1.1.0, numpy 2.5.2, opencv-contrib-python 5.0.0.93, torch 2.6.0+cu124
+mediapipe>=1.1.0
+numpy
+opencv-contrib-python
+torch>=2.6.0
+
+# GPU NVIDIA (không bắt buộc): cài torch bản CUDA TRƯỚC khi chạy "python -m pip install -r requirements.txt", ví dụ:
+#   python -m pip install torch --index-url https://download.pytorch.org/whl/cu124
+# Không có GPU thì cứ cài như trên, demo tự chạy bằng CPU.
