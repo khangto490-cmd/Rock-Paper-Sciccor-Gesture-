@@ -1,0 +1,10 @@
+{
+  "model": "step2 s1",
+  "checkpoints": [
+    "C:\\Users\\Acer Nitro 5 Tiger\\Downloads\\Data_321\\checkpoints_task9\\step2\\seed1\\TCN.pt"
+  ],
+  "n_in": [
+    546
+  ],
+  "TB_moi_goc": 96.71666913032531
+}
