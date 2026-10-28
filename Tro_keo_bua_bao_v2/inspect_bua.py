@@ -49,9 +49,11 @@ def prep(r, frac):
         return None
     touch = ((lm[:, :, 0].min(axis=1) < 0.01) | (lm[:, :, 0].max(axis=1) > 0.99) |
              (lm[:, :, 1].min(axis=1) < 0.01) | (lm[:, :, 1].max(axis=1) > 0.99))
+    labs = [l for l in r["mp_label"][det] if l]
+    mp = Counter(labs).most_common(1)[0][0] if labs else ""
     return dict(name=os.path.basename(r["path"]), gesture=r["meta"]["gesture"],
                 hand=r["meta"]["hand_cue_player"], t=r["t"][det], ek=ext_keo(Pn), eb=ext_bao(Pn),
-                palm=palm, entry=int(np.argmax(inside)), touch=touch)
+                palm=palm, entry=int(np.argmax(inside)), touch=touch, mp=mp)
 
 
 def run_around(high, i0):
@@ -170,7 +172,7 @@ def main():
         if cat.startswith("A") and closing is not None:
             close_ms.append(closing)
         cats[cat] += 1
-        rows.append(dict(file=p["name"], hand=p["hand"], category=cat,
+        rows.append(dict(file=p["name"], hand=p["hand"], mediapipe_label=p["mp"], category=cat,
                          ext_keo_at_entry=round(float(p["ek"][p["entry"]]), 2),
                          ext_bao_at_entry=round(float(p["eb"][p["entry"]]), 2),
                          high_run_frames=n_run, open_from_first_frame=bool(a == 0),
@@ -189,10 +191,11 @@ def main():
         print("  -> day la thoi gian may can cho de thay tay nam lai.")
 
     print("\nCHI TIET (toi da 30 van):")
-    print(f"  {'file':<28}{'tay':<6}{'loai':<17}{'keo@vao':>8}{'bao@vao':>8}{'khung':>6}{'ms mo sau vao':>14}")
+    print(f"  {'file':<28}{'tay':<6}{'MP':<7}{'loai':<17}{'keo@vao':>8}{'bao@vao':>8}{'khung':>6}{'ms mo sau vao':>14}")
     for r in rows[:30]:
-        print(f"  {r['file']:<28}{r['hand']:<6}{r['category']:<17}{r['ext_keo_at_entry']:>8}"
+        print(f"  {r['file']:<28}{r['hand']:<6}{r['mediapipe_label']:<7}{r['category']:<17}{r['ext_keo_at_entry']:>8}"
               f"{r['ext_bao_at_entry']:>8}{r['high_run_frames']:>6}{str(r['ms_open_after_entry']):>14}")
+    print("  (MP = nhan Left/Right cua MediaPipe; tay PHAI binh thuong se la 'Left', tay TRAI la 'Right' vi anh khong lat)")
 
     if rows:
         with open("bua_flagged.csv", "w", newline="", encoding="utf-8") as f:
