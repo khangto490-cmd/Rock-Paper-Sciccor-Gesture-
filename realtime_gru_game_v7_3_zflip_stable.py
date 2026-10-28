@@ -7,7 +7,7 @@ import mediapipe as mp
 import numpy as np
 import torch
 import torch.nn as nn
-from gesture_gate import gate_check
+from gesture_gate_stable import gate_check
 
 MODEL_PATH = "checkpoints/tiny_gru_rps_best.pth"
 META_PATH = "checkpoints/tiny_gru_rps_meta.pkl"
@@ -26,6 +26,14 @@ HAND_READY_FRAMES = 4
 REAL_MODEL_FRAMES = 5
 REQUIRED_CAPTURE_FRAMES = 7
 MIN_CONFIDENCE = 0.80
+
+# Current tested inference configuration: flip local Z for the physical left hand.
+# This is an inference-time transform only; the checkpoint/training data are unchanged.
+Z_FLIP_LEFT = True
+# The input passed to MediaPipe is the raw webcam frame (not cv2.flip'ed).
+# MediaPipe Hands handedness labels assume mirrored selfie input; when the
+# input is unmirrored, swap its Left/Right label to estimate the physical hand.
+INPUT_IMAGE_IS_MIRRORED = False
 
 # Balanced lock V7.2: palm + finger motion, responsive EMA, hysteresis
 STABILITY_PALM_POINTS = np.array([0, 5, 9, 13, 17], dtype=np.int64)
@@ -125,6 +133,42 @@ def profile_text(name):
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
+
+
+def get_physical_hand_side(results):
+    """Return (physical_side, raw_mediapipe_label).
+
+    Handedness is only a best-effort diagnostic; check the printed label while
+    testing. MediaPipe Hands assumes mirrored selfie input for Left/Right.
+    """
+    if not getattr(results, "multi_handedness", None):
+        return "unknown", "unknown"
+
+    try:
+        raw_label = results.multi_handedness[0].classification[0].label
+    except (AttributeError, IndexError, TypeError):
+        return "unknown", "unknown"
+
+    raw_side = raw_label.strip().lower()
+    if raw_side not in {"left", "right"}:
+        return "unknown", str(raw_label)
+
+    if INPUT_IMAGE_IS_MIRRORED:
+        physical_side = raw_side
+    else:
+        # Raw, unmirrored camera input: MediaPipe's assumed selfie label is swapped.
+        physical_side = "left" if raw_side == "right" else "right"
+
+    return physical_side, str(raw_label)
+
+
+def apply_hand_specific_transform(local_landmarks, physical_hand_side):
+    """Apply the tested left-hand local-Z transform and report whether applied."""
+    transformed = np.asarray(local_landmarks, dtype=np.float32).copy()
+    z_flipped = bool(Z_FLIP_LEFT and physical_hand_side == "left")
+    if z_flipped:
+        transformed[:, 2] *= -1.0
+    return transformed, z_flipped
 
 
 def resize_frame(frame):
@@ -370,11 +414,17 @@ hand_ready_count = 0
 previous_local = None
 stable_count = 0
 motion_ema = None
+# Lock the physical hand side for a single TI/capture window. This prevents
+# left-hand Z-flipped frames and right-hand unflipped frames entering one GRU window.
+capture_hand_side = "unknown"
+capture_zflip_applied = False
 
 locked_label = None
 locked_conf = 0.0
 locked_probs = None
 cpu_label = None
+current_physical_hand_side = "unknown"
+current_mediapipe_handedness_label = "unknown"
 
 
 def set_state(new_state):
@@ -386,6 +436,7 @@ def set_state(new_state):
 def new_round():
     global hand_ready_count
     global previous_local, stable_count, motion_ema
+    global capture_hand_side, capture_zflip_applied
     global locked_label, locked_conf, locked_probs, cpu_label
 
     capture_buffer.clear()
@@ -393,6 +444,8 @@ def new_round():
     previous_local = None
     stable_count = 0
     motion_ema = None
+    capture_hand_side = "unknown"
+    capture_zflip_applied = False
 
     locked_label = None
     locked_conf = 0.0
@@ -408,6 +461,18 @@ def try_lock(label, confidence, probs):
         print("[DECISION] No valid prediction; reject.")
         set_state(STATE_RETRY)
         return
+
+    if capture_hand_side not in {"left", "right"}:
+        print("[CAPTURE] Physical hand side could not be verified; rejecting this round.")
+        set_state(STATE_RETRY)
+        return
+
+    print(
+        f"[HAND] captured_physical={capture_hand_side} "
+        f"| current_physical={current_physical_hand_side} "
+        f"| MediaPipe_label={current_mediapipe_handedness_label} "
+        f"| zflip_applied={capture_zflip_applied}"
+    )
 
     probs = np.asarray(probs, dtype=np.float32).reshape(-1)
     if probs.size < 2:
@@ -494,6 +559,8 @@ with mp_hands.Hands(
             previous_local = None
             stable_count = 0
             motion_ema = None
+            capture_hand_side = "unknown"
+            capture_zflip_applied = False
             set_state(STATE_TI)
 
         if frame_index % PROCESS_EVERY == 0:
@@ -516,6 +583,9 @@ with mp_hands.Hands(
             )
 
             if results.multi_hand_landmarks:
+                current_physical_hand_side, current_mediapipe_handedness_label = (
+                    get_physical_hand_side(results)
+                )
                 hand = results.multi_hand_landmarks[0]
 
                 drawing_started = time.perf_counter()
@@ -542,41 +612,86 @@ with mp_hands.Hands(
                     local_landmarks = extract_local_landmarks(hand)
 
                     if local_landmarks is not None:
-                        motion = calculate_motion(
-                            local_landmarks,
-                            previous_local,
-                        )
+                        detected_side = current_physical_hand_side
 
-                        previous_local = local_landmarks.copy()
-                        capture_buffer.append(
-                            flatten_features(local_landmarks)
-                        )
-
-                        if motion is not None:
-                            if motion_ema is None:
-                                motion_ema = motion
-                            else:
-                                motion_ema = (
-                                    MOTION_EMA_ALPHA * motion
-                                    + (1.0 - MOTION_EMA_ALPHA) * motion_ema
+                        # Only capture known sides. The side determines whether Z
+                        # is flipped, so unknown-side frames must not enter the GRU window.
+                        if detected_side not in {"left", "right"}:
+                            if capture_buffer or capture_hand_side != "unknown":
+                                print("[CAPTURE] Hand side unknown; clearing current window.")
+                            capture_buffer.clear()
+                            previous_local = None
+                            stable_count = 0
+                            motion_ema = None
+                            capture_hand_side = "unknown"
+                            capture_zflip_applied = False
+                        else:
+                            # If the user changes hands during TI, discard the mixed
+                            # window and start a fresh one using the new hand's transform.
+                            if capture_hand_side != "unknown" and detected_side != capture_hand_side:
+                                print(
+                                    f"[CAPTURE] Hand changed {capture_hand_side} -> {detected_side}; "
+                                    "clearing mixed-hand window."
                                 )
-
-                            if motion_ema <= STABLE_MOTION_THRESHOLD:
-                                stable_count += 1
-                            elif motion_ema >= MOVING_RESET_THRESHOLD:
-                                # Chuyển động rõ ràng: reset để không lock gesture trung gian.
+                                capture_buffer.clear()
+                                previous_local = None
                                 stable_count = 0
-                            else:
-                                # Vùng lưng chừng/jitter nhẹ: giảm dần, không reset mạnh.
-                                stable_count = max(0, stable_count - 1)
+                                motion_ema = None
+                                state_started = time.perf_counter()
+
+                            # Start the decision timer when the first known-side frame arrives
+                            # (also restarts the timer if tracking was temporarily lost).
+                            if capture_hand_side == "unknown" and not capture_buffer:
+                                state_started = time.perf_counter()
+
+                            capture_hand_side = detected_side
+                            local_landmarks, capture_zflip_applied = apply_hand_specific_transform(
+                                local_landmarks, capture_hand_side
+                            )
+                            motion = calculate_motion(
+                                local_landmarks,
+                                previous_local,
+                            )
+
+                            previous_local = local_landmarks.copy()
+                            capture_buffer.append(
+                                flatten_features(local_landmarks)
+                            )
+
+                            if motion is not None:
+                                if motion_ema is None:
+                                    motion_ema = motion
+                                else:
+                                    motion_ema = (
+                                        MOTION_EMA_ALPHA * motion
+                                        + (1.0 - MOTION_EMA_ALPHA) * motion_ema
+                                    )
+
+                                if motion_ema <= STABLE_MOTION_THRESHOLD:
+                                    stable_count += 1
+                                elif motion_ema >= MOVING_RESET_THRESHOLD:
+                                    # Chuyển động rõ ràng: reset để không lock gesture trung gian.
+                                    stable_count = 0
+                                else:
+                                    # Vùng lưng chừng/jitter nhẹ: giảm dần, không reset mạnh.
+                                    stable_count = max(0, stable_count - 1)
 
             else:
+                current_physical_hand_side = "unknown"
+                current_mediapipe_handedness_label = "unknown"
                 if state == STATE_WAIT_HAND:
                     hand_ready_count = 0
                 elif state == STATE_TI:
+                    # Never combine old frames with frames captured after tracking loss.
+                    had_capture = bool(capture_buffer) or capture_hand_side != "unknown"
+                    capture_buffer.clear()
                     stable_count = 0
                     previous_local = None
                     motion_ema = None
+                    capture_hand_side = "unknown"
+                    capture_zflip_applied = False
+                    if had_capture:
+                        state_started = time.perf_counter()
 
         if state == STATE_TI:
             # Tính thời gian từ lúc vào trạng thái TI, không dùng elapsed của TU.
@@ -784,8 +899,24 @@ with mp_hands.Hands(
         )
 
         
+        mode_text = (
+            f"Hand: {current_physical_hand_side} | "
+            f"Capture: {capture_hand_side} | "
+            f"Z-flip applied: {capture_zflip_applied}"
+        )
+        cv2.putText(
+            display,
+            mode_text,
+            (20, 75),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.60,
+            (255, 255, 255),
+            2,
+            cv2.LINE_AA,
+        )
+
         cv2.imshow(
-            "Tiny GRU RPS - V7.2 Profiling",
+            "Tiny GRU RPS - Z-Flip Stable Candidate",
             display,
         )
 
