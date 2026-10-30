@@ -24,12 +24,33 @@ Trả lời các câu hỏi:
      nắm tay. Với mỗi số khung sau mốc (và vài khung trước mốc), đo độ chính xác khi chỉ nhìn khung hiện
      tại và khi cộng dồn từ đầu ván (phai dần / cộng đều). Búa không có thay đổi thật nên chỉ có "mốc giả".
 
+  8. Đánh giá theo HÌNH TAY THẤY ĐƯỢC ở khung vào ô (luật: cử chỉ của người chơi = hình tay ở đúng khung
+     máy quyết định). Hình tay thấy được xác định bằng luật hình học trên 21 mốc, không dựa vào nhãn ý
+     định: ngón duỗi khi đầu ngón xa cổ tay hơn khớp giữa. Báo: hình tay lúc vào ô khớp ý định bao nhiêu,
+     và độ chính xác / tỉ lệ thắng-hòa-thua của máy so với hình thấy được (chỉ nhìn khung vs cộng dồn).
+     Trước đó có bước kiểm tra luật hình học trên 5 khung cuối ván (lúc tay đã thành hình).
+
+  9. Hình tay thành hình nhanh đến đâu sau khi tay vào ô: tỉ lệ ván đã thành hình sau T ms, thời gian
+     thành hình (trung vị / p90), và với mỗi khung quyết định đặt ở j khung sau lúc vào ô: tỉ lệ hình thấy
+     được khớp ý định, độ chính xác và tỉ lệ thắng-hòa-thua của máy. Dùng để chọn khung quyết định.
+
+ 10. Luật "chờ đến khi hình tay đọc rõ" (tối đa --wait-frames khung, mặc định 6 ~ 190 ms): từ khung vào ô,
+     chốt ở khung đầu tiên mà luật hình học đọc cùng một hình rõ ở S khung liên tiếp (S = 1, 2, 3); đến hạn
+     mà chưa rõ thì chốt theo model. So hai cách đọc (luật hình học / model) và các mốc chờ cố định.
+     Báo độ trễ, tỉ lệ bị ép ở hạn, và thắng-hòa-thua so với ý định và so với hình thấy được.
+
+ 11. Chờ cố định --wait-frames khung (mặc định 6) rồi, NẾU độ tin cậy của model còn thấp (dưới ngưỡng), chờ
+     thêm tối đa 1-3 khung và chốt ngay khi đủ tin cậy. So với chờ cố định +6, +7, +8, +9 khung: độ trễ,
+     tỉ lệ ván phải chờ thêm, độ chính xác và thắng-hòa-thua (so với ý định và so với hình thấy được).
+
 Cách chạy:
     python analyze_approach.py                          (đọc approach_data_v2)
     python analyze_approach.py --outdir approach_data_v2 --square 0.2 0.25 0.3
     python analyze_approach.py --cv round               (ép kiểm tra chéo theo ván)
     python analyze_approach.py --drop-suspect           (loại ván nghi sai cử chỉ ở mục 1b)
     python analyze_approach.py --no-variants            (bỏ mục 6 cho chạy nhanh)
+    python analyze_approach.py --no-visible             (bỏ mục 8)
+    python analyze_approach.py --ext-hi 1.2 --ext-lo 0.95   (chỉnh ngưỡng luật hình học của mục 8)
 
 Kiểm tra chéo (--cv auto): nếu có từ 2 người trở lên thì huấn luyện trên người này, kiểm tra trên người
 khác; nếu chỉ một người nhưng nhiều buổi thì theo buổi; chỉ khi một người một buổi mới phải chia theo
@@ -62,6 +83,18 @@ DYN_LAG = 3                                   # đặc trưng động: so với 
 
 OFFSETS = [-3, 0, 1, 2, 3, 6, 9]              # mục 7: số khung so với mốc đổi dáng (âm = trước mốc)
 ONSET_LAMBDAS = [0.0, 0.7, 1.0]               # mục 7: 0 = chỉ khung hiện tại, 1 = cộng đều
+
+EXT_HI, EXT_LO = 1.15, 1.00                   # mục 8: tỉ lệ (đầu ngón / khớp giữa) tới cổ tay: >= HI duỗi, <= LO co
+FINGERS = [(6, 8), (10, 12), (14, 16), (18, 20)]   # (khớp giữa, đầu ngón): trỏ, giữa, áp út, út
+LAMS8 = [0.0, 0.5, 0.7, 1.0]
+SHAPE_NAMES = ["keo", "bua", "bao", "khong ro"]
+WAIT_FRAMES = 6                               # mục 10: hạn chờ mặc định (khung sau lúc vào ô)
+PERSIST = [1, 2, 3]                           # mục 10: số khung liên tiếp phải cùng đọc ra một hình rõ
+EXT_THRS = [0.7, 0.8, 0.9]                    # mục 11: ngưỡng tin cậy để khỏi phải chờ thêm
+EXT_FRAMES = [1, 2, 3]                        # mục 11: số khung chờ thêm tối đa
+FORM_RUN = 3                                  # mục 9: 'thành hình' = luật đọc đúng ý định >= 3 khung liên tiếp
+FORM_OFFSETS = [0, 3, 6, 9, 12]               # mục 9: khung quyết định đặt j khung sau lúc vào ô
+FORM_T = [0, 100, 200, 300, 400]              # mục 9: mốc thời gian (ms) kể từ lúc vào ô
 
 # Luật chơi: BEATS[m] = cử chỉ mà nước m thắng (keo thắng bao, bua thắng keo, bao thắng bua)
 BEATS = {0: 2, 1: 0, 2: 1}
@@ -175,7 +208,7 @@ def prepare(r, frac):
     return dict(entry=int(np.argmax(inside)), tt=r["t"][det], eng=eng_features(Pn),
                 ek=ext_keo(Pn), eb=ext_bao(Pn), gesture=r["meta"]["gesture"],
                 hand=r["meta"]["hand_cue_player"], idx_full=det, path=r["path"],
-                person=str(r["meta"].get("person", "?")), skey=session_key(r))
+                person=str(r["meta"].get("person", "?")), skey=session_key(r), Pn=Pn)
 
 
 # ------------------------------------------------------------------ chia kiểm tra chéo
@@ -664,8 +697,351 @@ def onset_experiment(seqs, reps, cv_mode):
     print("   giup duoc muc 30 ms tinh tu luc doi dang; neu j<0 (truoc moc) da cao thi bang chung truoc moc co thong tin.")
 
 
+# ------------------------------------------------------------------ 8. hình tay thấy được (luật hình học)
+def visible_shape(P):
+    """P (n,21,3) đã chuẩn hóa -> (n,) 0 kéo, 1 búa, 2 bao, -1 không rõ.
+    Ngón duỗi khi |đầu ngón - cổ tay| / |khớp giữa - cổ tay| >= EXT_HI, co khi <= EXT_LO, còn lại lưng chừng.
+    Kéo = trỏ+giữa duỗi, áp út+út co; bao = 4 ngón duỗi; búa = 4 ngón co; còn lại = không rõ. Bỏ qua ngón cái."""
+    st = np.zeros((len(P), 4), int)
+    for k, (pip, tip) in enumerate(FINGERS):
+        with np.errstate(divide="ignore", invalid="ignore"):
+            r = np.linalg.norm(P[:, tip], axis=1) / np.linalg.norm(P[:, pip], axis=1)
+        st[:, k] = np.where(r >= EXT_HI, 1, np.where(r <= EXT_LO, -1, 0))
+    shp = np.full(len(P), -1)
+    shp[(st == -1).all(axis=1)] = 1
+    shp[(st == 1).all(axis=1)] = 2
+    shp[(st[:, 0] == 1) & (st[:, 1] == 1) & (st[:, 2] == -1) & (st[:, 3] == -1)] = 0
+    return shp
+
+
+def print_shape_matrix(intent, shape, header):
+    print(header)
+    print("                " + "".join(f"{n:>10}" for n in SHAPE_NAMES) + "      n")
+    for g in range(3):
+        m = intent == g
+        if not m.any():
+            continue
+        cells = [100 * np.mean(shape[m] == c) for c in (0, 1, 2, -1)]
+        print(f"     {GESTURES[g]:<9}  " + "".join(f"{v:>9.1f}%" for v in cells) + f"   {int(m.sum()):>4}")
+
+
+def rule_check(rounds):
+    print("\n" + "=" * 72)
+    print("8a. KIEM TRA LUAT HINH HOC (ap dung o 5 khung cuoi van, luc tay da thanh hinh)")
+    print("=" * 72)
+    intent, shape = [], []
+    for r in rounds:
+        det = np.where(r["det"])[0]
+        if len(det) < 5:
+            continue
+        Pn = normalize(r["lm"][det])
+        Pn = Pn[np.isfinite(Pn).all(axis=(1, 2))]
+        if len(Pn) < 5:
+            continue
+        intent.append(G_IDX[r["meta"]["gesture"]])
+        shape.append(Counter(visible_shape(Pn[-5:]).tolist()).most_common(1)[0][0])
+    if len(intent) < 15:
+        print("Qua it van de kiem tra.")
+        return None
+    intent, shape = np.array(intent), np.array(shape)
+    print(f"   Nguong: ngon duoi khi ti le >= {EXT_HI}, co khi <= {EXT_LO} (chinh bang --ext-hi / --ext-lo)")
+    print_shape_matrix(intent, shape, "   Hinh luat doc duoc (hang = y dinh, cot = hinh luat doc, % theo hang):")
+    match = 100 * np.mean(shape == intent)
+    print(f"   Luat khop y dinh o cuoi van: {match:.1f}%  (tay luc nay da thanh hinh nen nen cao)")
+    if match < 85:
+        print("   CANH BAO: luat khop thap -> hinh 'thay duoc' o muc 8 KHONG dang tin; thu doi --ext-hi/--ext-lo.")
+    return float(match)
+
+
+def visible_experiment(prepared, reps, cv_mode):
+    y = np.array([G_IDX[p["gesture"]] for p in prepared])
+    vis = np.array([visible_shape(p["Pn"][p["entry"]: p["entry"] + 1])[0] for p in prepared])
+    print("\n8. DANH GIA THEO HINH TAY THAY DUOC O KHUNG VAO O (cu chi nguoi choi = hinh tay o khung may quyet dinh)")
+    print_shape_matrix(y, vis, "   Hinh tay thay duoc luc vao o (hang = y dinh, cot = hinh luat doc, % theo hang):")
+    n_formed = int(np.sum(vis == y))
+    print(f"   Da thanh hinh dung y dinh luc vao o: {n_formed}/{len(y)} van ({100 * n_formed / len(y):.0f}%); "
+          f"chua thanh hinh / khong ro / khac: {len(y) - n_formed}")
+    n_folds = len(list(make_splits(prepared, y, cv_mode, 0)))
+    if n_folds < 2:
+        return
+    reps_eff = reps if cv_mode == "round" else 1
+    preds = {lam: [] for lam in LAMS8}
+    for rep in range(reps_eff):
+        for tr, te in make_splits(prepared, y, cv_mode, rep):
+            X = np.concatenate([prepared[i]["eng"] for i in tr])
+            lab = np.concatenate([np.full(len(prepared[i]["eng"]), y[i]) for i in tr])
+            rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=10, random_state=rep,
+                                        n_jobs=-1).fit(X, lab)
+            for i in te:
+                p = prepared[i]
+                probs = proba3(rf, p["eng"][: p["entry"] + 1])
+                for lam in LAMS8:
+                    preds[lam].append((i, decide(probs, p["entry"], 0, lam)))
+    print(f"\n   Do chinh xac cua may o khung vao o (kiem tra cheo {CV_TEXT[cv_mode]}); T/H/T = may thang/hoa/thua (%)")
+    print("   'vs y dinh' = so voi cu chi nguoi choi dinh lam; 'vs hinh thay duoc' chi tinh van luat doc ro.")
+    print(f"   {'lam':>5} {'vs y dinh':>10} {'(da thanh hinh':>15} {'chua thanh hinh)':>17}   "
+          f"{'vs hinh thay duoc':>18}   {'T/H/T vs hinh thay duoc':>24}")
+    for lam in LAMS8:
+        idx = np.array([i for i, _ in preds[lam]])
+        pr = np.array([q for _, q in preds[lam]])
+        yy, vv = y[idx], vis[idx]
+        formed = vv == yy
+        clear = vv >= 0
+        a_int = 100 * np.mean(pr == yy)
+        a_f = 100 * np.mean(pr[formed] == yy[formed]) if formed.any() else float("nan")
+        a_u = 100 * np.mean(pr[~formed] == yy[~formed]) if (~formed).any() else float("nan")
+        a_v = 100 * np.mean(pr[clear] == vv[clear]) if clear.any() else float("nan")
+        out = PAY[np.array([COUNTER[int(q)] for q in pr[clear]]), vv[clear]] if clear.any() else np.array([])
+        wdl = [100 * np.mean(out == v) if len(out) else float("nan") for v in (1, 0, -1)]
+        print(f"   {lam:>5.1f} {a_int:>9.1f}% {a_f:>14.1f}% {a_u:>16.1f}%   {a_v:>17.1f}%   "
+              f"{wdl[0]:>8.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}  (n={int(clear.sum()) // reps_eff})")
+    print(f"   Van chua thanh hinh luc vao o: {len(y) - n_formed}/{len(y)}; van luat doc ro: {int((vis >= 0).sum())}/{len(y)}.")
+    print("   Neu 'vs hinh thay duoc' cao hon 'vs y dinh' nhieu thi phan lon 'loi' so voi y dinh la do tay chua")
+    print("   thanh hinh (theo luat chot o khung may quyet dinh thi khong phai loi cua may). Luat hinh hoc chi la xap xi.")
+    print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%).")
+
+
+def formation_experiment(prepared, reps, cv_mode, rule_match=None):
+    y = np.array([G_IDX[p["gesture"]] for p in prepared])
+    shp_all = [visible_shape(p["Pn"]) for p in prepared]
+    print("\n9. HINH TAY THANH HINH NHANH DEN DAU SAU KHI VAO O")
+    print(f"   Thanh hinh = luat hinh hoc doc dung y dinh o >= {FORM_RUN} khung lien tiep (tinh tu khung vao o tro di).")
+    if rule_match is not None:
+        print(f"   Luat khop y dinh o cuoi van {rule_match:.1f}% -> khoang {100 - rule_match:.0f}% van se khong bao gio 'thanh hinh' "
+              "chi vi sai so cua luat.")
+
+    ftime = []                                  # ms ke tu luc vao o den luc thanh hinh (None = chua)
+    for i, p in enumerate(prepared):
+        sq = shp_all[i][p["entry"]:]
+        ok = sq == y[i]
+        t = None
+        for k in range(0, len(sq) - FORM_RUN + 1):
+            if ok[k:k + FORM_RUN].all():
+                t = float((p["tt"][p["entry"] + k] - p["tt"][p["entry"]]) * 1000)
+                break
+        ftime.append(t)
+
+    print("\n   Ti le van DA thanh hinh sau T ms ke tu luc tay vao o (T = 0: ngay khung vao o):")
+    print("      T(ms)" + "".join(f"{g:>9}" for g in GESTURES) + f"{'chung':>9}")
+    groups = {g: [ftime[i] for i in range(len(prepared)) if y[i] == G_IDX[g]] for g in GESTURES}
+    groups["chung"] = list(ftime)
+    for T in FORM_T:
+        cells = [100 * np.mean([t is not None and t <= T for t in groups[g]]) for g in GESTURES + ["chung"]]
+        print(f"      {T:>5}" + "".join(f"{c:>8.1f}%" for c in cells))
+    print("   Chua thanh hinh trong thoi gian ghi: " +
+          ", ".join(f"{g} {100 * np.mean([t is None for t in groups[g]]):.0f}%" for g in GESTURES))
+    parts = []
+    for g in GESTURES:
+        v = [t for t in groups[g] if t is not None]
+        parts.append(f"{g} {np.percentile(v, 50):.0f} / {np.percentile(v, 90):.0f}" if v else f"{g} n/a")
+    print("   Thoi gian thanh hinh (ms, trung vi / p90, chi cac van da thanh hinh): " + ", ".join(parts))
+
+    n_folds = len(list(make_splits(prepared, y, cv_mode, 0)))
+    if n_folds < 2:
+        return
+    reps_eff = reps if cv_mode == "round" else 1
+    maxj = max(FORM_OFFSETS)
+    preds = {j: [] for j in FORM_OFFSETS}
+    for rep in range(reps_eff):
+        for tr, te in make_splits(prepared, y, cv_mode, rep):
+            X = np.concatenate([prepared[i]["eng"] for i in tr])
+            lab = np.concatenate([np.full(len(prepared[i]["eng"]), y[i]) for i in tr])
+            rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=10, random_state=rep,
+                                        n_jobs=-1).fit(X, lab)
+            for i in te:
+                p = prepared[i]
+                probs = proba3(rf, p["eng"][: p["entry"] + 1 + maxj])
+                for j in FORM_OFFSETS:
+                    if p["entry"] + j < len(probs):
+                        preds[j].append((i, int(probs[p["entry"] + j].argmax())))
+
+    print(f"\n   Quyet dinh dat o j khung SAU luc vao o (chi nhin khung hien tai; kiem tra cheo {CV_TEXT[cv_mode]}):")
+    print("   'vs y dinh' = so voi cu chi dinh lam; 'vs hinh thay' = so voi hinh luat doc o khung quyet dinh (chi van doc ro).")
+    print(f"   {'khung':>5} {'ms':>5} {'n':>4}   {'thanh hinh':>10} {'khong ro':>9} {'hinh khac':>10}   "
+          f"{'may vs y dinh':>14} {'vs hinh thay':>13}   {'T/H/T vs hinh thay':>20}")
+    for j in FORM_OFFSETS:
+        avail = [i for i, p in enumerate(prepared) if p["entry"] + j < len(p["eng"])]
+        if len(avail) < 10:
+            continue
+        vis_f = np.array([shp_all[i][prepared[i]["entry"] + j] for i in avail])
+        yy = y[avail]
+        ms = np.median([(prepared[i]["tt"][prepared[i]["entry"] + j] - prepared[i]["tt"][prepared[i]["entry"]]) * 1000
+                        for i in avail])
+        formed, unclear = np.mean(vis_f == yy), np.mean(vis_f == -1)
+        other = np.mean((vis_f != yy) & (vis_f >= 0))
+        idx = np.array([i for i, _ in preds[j]])
+        pr = np.array([q for _, q in preds[j]])
+        vv = np.array([shp_all[i][prepared[i]["entry"] + j] for i in idx])
+        acc_i = 100 * np.mean(pr == y[idx])
+        clear = vv >= 0
+        acc_v = 100 * np.mean(pr[clear] == vv[clear]) if clear.any() else float("nan")
+        out = PAY[np.array([COUNTER[int(q)] for q in pr[clear]]), vv[clear]] if clear.any() else np.array([])
+        wdl = [100 * np.mean(out == v) if len(out) else float("nan") for v in (1, 0, -1)]
+        print(f"   {j:>+5d} {ms:>5.0f} {len(avail):>4}   {100 * formed:>9.1f}% {100 * unclear:>8.1f}% {100 * other:>9.1f}%   "
+              f"{acc_i:>13.1f}% {acc_v:>12.1f}%   {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}")
+    print("   Doc: chon khung quyet dinh sao cho ti le 'thanh hinh' du cao (phan con lai la van chua co cu chi ro")
+    print("   rang de tinh) ma van chap nhan duoc do tre. Luat hinh hoc chi la xap xi, nen mọi con so co sai so.".replace("mọi", "moi"))
+    print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%); n giam o j lon vi van ket thuc som.")
+
+
+def first_ready(shp, entry, last, S):
+    """Khung đầu tiên f trong [entry, last] mà S khung liên tiếp kết thúc ở f cùng đọc ra MỘT hình rõ (>= 0)."""
+    for f in range(entry, last + 1):
+        if f - S + 1 < 0:
+            continue
+        w = shp[f - S + 1: f + 1]
+        if w[0] >= 0 and (w == w[0]).all():
+            return f
+    return None
+
+
+def wait_policy_experiment(prepared, reps, cv_mode, wait_frames, median_dt_ms):
+    y = np.array([G_IDX[p["gesture"]] for p in prepared])
+    shp_all = [visible_shape(p["Pn"]) for p in prepared]
+    n_folds = len(list(make_splits(prepared, y, cv_mode, 0)))
+    if n_folds < 2:
+        return
+    reps_eff = reps if cv_mode == "round" else 1
+    W = wait_frames
+    policies = [("luat", S) for S in PERSIST] + [("model", S) for S in PERSIST] + [("co dinh", j) for j in (0, 3, 6)]
+    res = {pol: [] for pol in policies}
+    for rep in range(reps_eff):
+        for tr, te in make_splits(prepared, y, cv_mode, rep):
+            X = np.concatenate([prepared[i]["eng"] for i in tr])
+            lab = np.concatenate([np.full(len(prepared[i]["eng"]), y[i]) for i in tr])
+            rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=10, random_state=rep,
+                                        n_jobs=-1).fit(X, lab)
+            for i in te:
+                p, shp = prepared[i], shp_all[i]
+                entry = p["entry"]
+                last = min(entry + W, len(p["eng"]) - 1)
+                mp = proba3(rf, p["eng"][: last + 1]).argmax(1)       # doan cua model o tung khung
+                for kind, S in policies:
+                    if kind == "co dinh":
+                        f, forced = min(entry + S, last), False
+                        pred = int(mp[f])
+                    else:
+                        f0 = first_ready(shp, entry, last, S)
+                        forced = f0 is None
+                        f = last if forced else f0
+                        pred = int(shp[f]) if (kind == "luat" and shp[f] >= 0) else int(mp[f])
+                    res[(kind, S)].append(dict(y=int(y[i]), vis=int(shp[f]), pred=pred, forced=forced,
+                                               lat=float((p["tt"][f] - p["tt"][entry]) * 1000), now=(f == entry)))
+
+    print("\n10. CHO DEN KHI HINH TAY DOC RO ROI MOI QUYET DINH (toi da "
+          f"{W} khung ~ {W * median_dt_ms:.0f} ms sau luc vao o)")
+    print("   Quy tac: tu khung vao o, chot o khung DAU TIEN ma luat hinh hoc doc cung mot hinh ro o S khung lien tiep;")
+    print("   den han ma chua ro thi chot theo model o khung han. 'luat' = may chot theo hinh luat doc; 'model' = may chot theo")
+    print("   model (khung chot van do luat chon). 'co dinh' = khong cho doi hinh ro, chot o +j khung (de so sanh).")
+    names = {("luat", S): f"luat, S={S}" for S in PERSIST}
+    names.update({("model", S): f"model, S={S}" for S in PERSIST})
+    names.update({("co dinh", j): f"co dinh +{j} khung" for j in (0, 3, 6)})
+
+    print(f"\n   A. Do tre va so voi cu chi DINH LAM (n={len(y)}); T/H/T = may thang/hoa/thua (%)")
+    print(f"   {'cach':<18} {'chot ngay':>10} {'tre p50':>8} {'p90':>6} {'bi ep han':>10}   "
+          f"{'dung y dinh':>12}   {'T/H/T vs y dinh':>17}   {'hinh ro nhung khac y dinh':>26}")
+    for pol in policies:
+        r = res[pol]
+        yy = np.array([q["y"] for q in r]); pr = np.array([q["pred"] for q in r])
+        lat = np.array([q["lat"] for q in r]); vis = np.array([q["vis"] for q in r])
+        out = PAY[np.array([COUNTER[int(a)] for a in pr]), yy]
+        wdl = [100 * np.mean(out == v) for v in (1, 0, -1)]
+        forced = 100 * np.mean([q["forced"] for q in r]) if pol[0] != "co dinh" else float("nan")
+        now = 100 * np.mean([q["now"] for q in r])
+        other = 100 * np.mean((vis >= 0) & (vis != yy))
+        ftxt = f"{forced:>9.0f}%" if forced == forced else f"{'-':>10}"
+        print(f"   {names[pol]:<18} {now:>9.0f}% {np.percentile(lat, 50):>8.0f} {np.percentile(lat, 90):>6.0f} {ftxt}   "
+              f"{100 * np.mean(pr == yy):>11.1f}%   {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   {other:>25.1f}%")
+    print("\n   B. So voi HINH THAY DUOC o khung chot (chi van luat doc ro o khung do)")
+    print(f"   {'cach':<18} {'dung hinh thay':>15}   {'T/H/T vs hinh thay':>20}   {'n ro':>5}")
+    for pol in policies:
+        r = res[pol]
+        clear = [q for q in r if q["vis"] >= 0]
+        if not clear:
+            continue
+        pr = np.array([q["pred"] for q in clear]); vv = np.array([q["vis"] for q in clear])
+        out = PAY[np.array([COUNTER[int(a)] for a in pr]), vv]
+        wdl = [100 * np.mean(out == v) for v in (1, 0, -1)]
+        print(f"   {names[pol]:<18} {100 * np.mean(pr == vv):>14.1f}%   {wdl[0]:>8.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   "
+              f"{len(clear) // reps_eff:>5}")
+    print("   Doc: 'bi ep han' cao nghia la nhieu van den het thoi gian cho van chua doc ro. 'hinh ro nhung khac y dinh'")
+    print("   la hinh trung gian (vd ngon dang mo) bi coi la cu chi ngay khi vua doc ro; tang S giam hien tuong nay nhung")
+    print("   tang do tre. Luat hinh hoc chi la xap xi nen moi con so co sai so.")
+    print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%).")
+
+
+def extend_policy_experiment(prepared, reps, cv_mode, wait_frames, median_dt_ms):
+    y = np.array([G_IDX[p["gesture"]] for p in prepared])
+    shp_all = [visible_shape(p["Pn"]) for p in prepared]
+    n_folds = len(list(make_splits(prepared, y, cv_mode, 0)))
+    if n_folds < 2:
+        return
+    reps_eff = reps if cv_mode == "round" else 1
+    W0, Emax = wait_frames, max(EXT_FRAMES)
+    policies = [("co dinh", E, None) for E in (0,) + tuple(EXT_FRAMES)] + \
+               [("them", E, thr) for thr in EXT_THRS for E in EXT_FRAMES]
+    res = {pol: [] for pol in policies}
+    for rep in range(reps_eff):
+        for tr, te in make_splits(prepared, y, cv_mode, rep):
+            X = np.concatenate([prepared[i]["eng"] for i in tr])
+            lab = np.concatenate([np.full(len(prepared[i]["eng"]), y[i]) for i in tr])
+            rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=10, random_state=rep,
+                                        n_jobs=-1).fit(X, lab)
+            for i in te:
+                p, shp = prepared[i], shp_all[i]
+                entry = p["entry"]
+                cut = min(len(p["eng"]) - 1, entry + W0 + Emax) + 1
+                probs = proba3(rf, p["eng"][:cut])
+                top, am = probs.max(1), probs.argmax(1)
+                at = lambda f: min(f, cut - 1)
+                for pol in policies:
+                    kind, E, thr = pol
+                    if kind == "co dinh":
+                        f, extended = at(entry + W0 + E), E > 0
+                    else:
+                        f = at(entry + W0)
+                        extended = top[f] < thr
+                        if extended:
+                            for k in range(1, E + 1):
+                                f = at(entry + W0 + k)
+                                if top[f] >= thr:
+                                    break
+                    res[pol].append(dict(y=int(y[i]), pred=int(am[f]), vis=int(shp[f]), extended=bool(extended),
+                                         low_end=bool(kind == "them" and top[f] < thr),
+                                         lat=float((p["tt"][f] - p["tt"][entry]) * 1000)))
+
+    print(f"\n11. CHO {W0} KHUNG, NEU DO TIN CAY THAP THI CHO THEM (toi da {Emax} khung ~ {Emax * median_dt_ms:.0f} ms)")
+    print(f"   Quy tac: chot o khung thu {W0} sau luc vao o; neu xac suat cao nhat < nguong thi cho them tung khung (toi da E khung),")
+    print("   chot ngay khi xac suat >= nguong, het cho ma van thap thi chot theo khung cuoi. 'co dinh +j' = luon cho j khung.")
+    print("   'them%' = ti le van phai cho them; 'thap%' = ti le van het cho ma van chua du tin cay; T/H/T = may thang/hoa/thua (%).")
+    print(f"   {'cach':<22} {'tre p50':>8} {'p90':>6} {'max':>6} {'them%':>6} {'thap%':>6}   {'dung y dinh':>12} {'T/H/T vs y dinh':>18}"
+          f"   {'dung hinh thay':>15} {'T/H/T vs hinh thay':>20}")
+    for pol in policies:
+        kind, E, thr = pol
+        name = f"co dinh +{W0 + E}" if kind == "co dinh" else f"{W0} + toi da {E}, nguong {thr:.1f}"
+        r = res[pol]
+        yy = np.array([q["y"] for q in r]); pr = np.array([q["pred"] for q in r]); vv = np.array([q["vis"] for q in r])
+        lat = np.array([q["lat"] for q in r])
+        out = PAY[np.array([COUNTER[int(a)] for a in pr]), yy]
+        wdl = [100 * np.mean(out == v) for v in (1, 0, -1)]
+        clear = vv >= 0
+        outv = PAY[np.array([COUNTER[int(a)] for a in pr[clear]]), vv[clear]] if clear.any() else np.array([])
+        wv = [100 * np.mean(outv == v) if len(outv) else float("nan") for v in (1, 0, -1)]
+        acc_v = 100 * np.mean(pr[clear] == vv[clear]) if clear.any() else float("nan")
+        them = 100 * np.mean([q["extended"] for q in r])
+        thap = 100 * np.mean([q["low_end"] for q in r]) if kind == "them" else float("nan")
+        thap_t = f"{thap:>5.0f}%" if thap == thap else f"{'-':>6}"
+        print(f"   {name:<22} {np.percentile(lat, 50):>8.0f} {np.percentile(lat, 90):>6.0f} {lat.max():>6.0f} {them:>5.0f}% {thap_t}   "
+              f"{100 * np.mean(pr == yy):>11.1f}% {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   "
+              f"{acc_v:>14.1f}% {wv[0]:>8.1f}/{wv[1]:>4.1f}/{wv[2]:>4.1f}")
+    print("   Doc: chi tin mot cach hon 'co dinh +6' khi so van thua giam ro ret (hon sai so) VA thoi gian cho (p90, max) van")
+    print("   nam trong muc ban chap nhan. 'co dinh +7/+8/+9' la gia phai tra neu cho them cho TAT CA van, de so voi cho co chon loc.")
+    print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%); so van thua rat nho nen cang lon sai so.")
+
+
 # ------------------------------------------------------------------ chạy
 def main():
+    global EXT_HI, EXT_LO
     ap = argparse.ArgumentParser()
     ap.add_argument("--outdir", default="approach_data_v2")
     ap.add_argument("--person", default=None)
@@ -679,7 +1055,13 @@ def main():
                     help="cach chia kiem tra cheo: auto = theo nguoi neu >=2 nguoi, theo buoi neu >=2 buoi, con lai theo van")
     ap.add_argument("--drop-suspect", action="store_true", help="loai cac van nghi sai cu chi (muc 1b)")
     ap.add_argument("--no-variants", action="store_true", help="bo muc 6 (thu cai thien model) cho chay nhanh")
+    ap.add_argument("--no-visible", action="store_true", help="bo muc 8 (danh gia theo hinh tay thay duoc)")
+    ap.add_argument("--wait-frames", type=int, default=WAIT_FRAMES,
+                    help="muc 10: so khung toi da cho them sau luc vao o de hinh tay doc ro")
+    ap.add_argument("--ext-hi", type=float, default=EXT_HI, help="nguong ngon duoi cua luat hinh hoc (muc 8)")
+    ap.add_argument("--ext-lo", type=float, default=EXT_LO, help="nguong ngon co cua luat hinh hoc (muc 8)")
     args = ap.parse_args()
+    EXT_HI, EXT_LO = args.ext_hi, args.ext_lo
 
     rounds = load_rounds(args.outdir, args.person)
     if len(rounds) < 15:
@@ -696,6 +1078,10 @@ def main():
     print("\nCach kiem tra cheo: " + CV_TEXT[cv_mode] +
           (" (CANH BAO: chi co mot nguoi va mot buoi -> ket qua de lac quan; nen thu them nguoi/buoi khac)"
            if cv_mode == "round" else ""))
+
+    rule_match = None
+    if not args.no_visible:
+        rule_match = rule_check(rounds)
 
     targets = sorted({round(float(r["meta"]["target_frac"]), 2) for r in rounds if "target_frac" in r["meta"]})
     squares = sorted(set(args.square)) if args.square else sorted(set([0.20, 0.25, 0.30] + targets))
@@ -728,6 +1114,11 @@ def main():
         decision_experiment(prepared, args.reps, median_dt_ms, args.min_frames, cv_mode)
         if not args.no_variants:
             variant_experiment(prepared, args.reps, cv_mode)
+        if not args.no_visible:
+            visible_experiment(prepared, args.reps, cv_mode)
+            formation_experiment(prepared, args.reps, cv_mode, rule_match)
+            wait_policy_experiment(prepared, args.reps, cv_mode, args.wait_frames, median_dt_ms)
+            extend_policy_experiment(prepared, args.reps, cv_mode, args.wait_frames, median_dt_ms)
 
     seqs = [q for q in (prepare_seq(r) for r in rounds) if q is not None]
     onset_experiment(seqs, args.reps, cv_mode)
