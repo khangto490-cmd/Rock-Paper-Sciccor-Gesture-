@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from gesture_gate_stable import gate_check
+from collections import deque
 
 MODEL_PATH = "checkpoints/tiny_gru_rps_best.pth"
 META_PATH = "checkpoints/tiny_gru_rps_meta.pkl"
