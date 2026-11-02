@@ -990,7 +990,7 @@ with mp_hands.Hands(
         )
 
         cv2.imshow(
-            "Tiny GRU RPS - Z-Flip Stable V7.4",
+            "Tiny GRU RPS - Z-Flip Stable V7.5",
             display,
         )
 
