@@ -1,0 +1,9 @@
+round,wait_ms,frames_waited,forced,pred,conf,p_keo,p_bua,p_bao,machine_move,rule_shape,operator_label,outcome_vs_rule,outcome_vs_label,mp_ms,model_ms,compute_ms,shown_ms
+3,190.7,6,0,keo,0.999,0.999,0.000,0.001,bua,keo,,thang,,8.7,5.82,15.4,19.5
+4,168.1,6,0,bua,0.970,0.014,0.970,0.017,bao,bua,,thang,,8.2,4.56,13.1,22.7
+5,187.3,6,0,bao,0.998,0.002,0.001,0.998,keo,bao,,thang,,9.0,4.75,14.1,24.0
+6,187.6,6,0,keo,0.999,0.999,0.000,0.001,bua,keo,,thang,,8.6,4.52,13.6,18.4
+7,187.8,6,0,bao,0.998,0.001,0.001,0.998,keo,bao,,thang,,8.4,4.32,13.1,22.5
+8,188.7,6,0,keo,0.995,0.995,0.000,0.005,bua,keo,,thang,,8.9,4.88,14.2,22.5
+9,233.8,6,0,bao,0.970,0.030,0.000,0.970,keo,bao,,thang,,9.1,4.91,14.4,23.8
+10,221.5,6,0,bua,0.989,0.003,0.989,0.009,bao,bua,,thang,,8.9,5.21,14.5,24.8

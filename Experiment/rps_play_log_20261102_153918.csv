@@ -1,0 +1,9 @@
+round,wait_ms,frames_waited,forced,pred,conf,p_keo,p_bua,p_bao,machine_move,rule_shape,operator_label,outcome_vs_rule,outcome_vs_label,mp_ms,model_ms,compute_ms,shown_ms
+1,191.4,6,0,bua,0.493,0.104,0.493,0.402,bao,khong ro,,,,9.7,5.28,15.5,31.4
+3,247.8,6,0,bao,1.000,0.000,0.000,1.000,keo,bao,,thang,,9.7,5.15,15.2,24.7
+4,188.0,6,0,bao,1.000,0.000,0.000,1.000,keo,bao,,thang,,9.4,4.76,14.5,21.1
+5,200.3,6,0,bao,0.983,0.015,0.002,0.983,keo,bao,,thang,,8.9,5.25,14.6,24.9
+6,207.0,6,0,keo,1.000,1.000,0.000,0.000,bua,keo,,thang,,9.5,5.11,15.0,34.0
+7,200.1,6,0,bao,0.986,0.003,0.011,0.986,keo,bao,,thang,,8.2,4.60,13.1,28.2
+8,182.8,6,0,keo,1.000,1.000,0.000,0.000,bua,keo,,thang,,9.1,5.25,14.7,25.8
+10,190.6,6,0,bua,0.401,0.371,0.401,0.228,bao,khong ro,,,,9.3,4.82,14.5,21.6
