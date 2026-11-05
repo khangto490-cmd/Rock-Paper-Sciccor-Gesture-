@@ -43,6 +43,11 @@ Trả lời các câu hỏi:
      thêm tối đa 1-3 khung và chốt ngay khi đủ tin cậy. So với chờ cố định +6, +7, +8, +9 khung: độ trễ,
      tỉ lệ ván phải chờ thêm, độ chính xác và thắng-hòa-thua (so với ý định và so với hình thấy được).
 
+ 12. Đo TỪNG mốc chờ cố định +0..+9 khung (mọi khung, kể cả +1, +2, +4, +5) kể từ lúc tay VÀO Ô, và luật
+     "thoát sớm khi model rất chắc": từ khung vào ô, chốt ngay khi xác suất cao nhất >= ngưỡng (0,90 / 0,95 /
+     0,98) và cùng một cử chỉ ở S khung liên tiếp; không thì chờ đủ --wait-frames khung. Báo độ trễ, tỉ lệ
+     thoát sớm, độ chính xác của riêng các ván thoát sớm, thắng-hòa-thua.
+
 Cách chạy:
     python analyze_approach.py                          (đọc approach_data_v2)
     python analyze_approach.py --outdir approach_data_v2 --square 0.2 0.25 0.3
@@ -90,6 +95,9 @@ LAMS8 = [0.0, 0.5, 0.7, 1.0]
 SHAPE_NAMES = ["keo", "bua", "bao", "khong ro"]
 WAIT_FRAMES = 6                               # mục 10: hạn chờ mặc định (khung sau lúc vào ô)
 PERSIST = [1, 2, 3]                           # mục 10: số khung liên tiếp phải cùng đọc ra một hình rõ
+EE_THRS = [0.90, 0.95, 0.98]                  # mục 12: ngưỡng tin cậy để thoát sớm
+EE_PERSIST = [1, 2, 3]                        # mục 12: số khung liên tiếp cùng một cử chỉ, đủ tin cậy
+DENSE_J = list(range(0, 10))                  # mục 12: các mốc chờ cố định +0..+9 khung
 EXT_THRS = [0.7, 0.8, 0.9]                    # mục 11: ngưỡng tin cậy để khỏi phải chờ thêm
 EXT_FRAMES = [1, 2, 3]                        # mục 11: số khung chờ thêm tối đa
 FORM_RUN = 3                                  # mục 9: 'thành hình' = luật đọc đúng ý định >= 3 khung liên tiếp
@@ -1039,6 +1047,91 @@ def extend_policy_experiment(prepared, reps, cv_mode, wait_frames, median_dt_ms)
     print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%); so van thua rat nho nen cang lon sai so.")
 
 
+def early_exit_experiment(prepared, reps, cv_mode, wait_frames, median_dt_ms):
+    y = np.array([G_IDX[p["gesture"]] for p in prepared])
+    shp_all = [visible_shape(p["Pn"]) for p in prepared]
+    n_folds = len(list(make_splits(prepared, y, cv_mode, 0)))
+    if n_folds < 2:
+        return
+    reps_eff = reps if cv_mode == "round" else 1
+    W = wait_frames
+    horizon = max(W, max(DENSE_J))
+    dense = {j: [] for j in DENSE_J}
+    early = {(thr, S): [] for thr in EE_THRS for S in EE_PERSIST}
+    for rep in range(reps_eff):
+        for tr, te in make_splits(prepared, y, cv_mode, rep):
+            X = np.concatenate([prepared[i]["eng"] for i in tr])
+            lab = np.concatenate([np.full(len(prepared[i]["eng"]), y[i]) for i in tr])
+            rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=10, random_state=rep,
+                                        n_jobs=-1).fit(X, lab)
+            for i in te:
+                p, shp = prepared[i], shp_all[i]
+                entry = p["entry"]
+                cut = min(len(p["eng"]) - 1, entry + horizon) + 1
+                probs = proba3(rf, p["eng"][:cut])
+                top, am = probs.max(1), probs.argmax(1)
+
+                def rec(f, flag=False):
+                    return dict(y=int(y[i]), pred=int(am[f]), vis=int(shp[f]), early=flag,
+                                lat=float((p["tt"][f] - p["tt"][entry]) * 1000))
+                for j in DENSE_J:
+                    dense[j].append(rec(min(entry + j, cut - 1)))
+                f_end = min(entry + W, cut - 1)
+                for thr in EE_THRS:
+                    for S in EE_PERSIST:
+                        f_hit = None
+                        for f in range(entry, f_end + 1):
+                            lo = f - S + 1
+                            if lo < 0:
+                                continue
+                            if (top[lo:f + 1] >= thr).all() and (am[lo:f + 1] == am[f]).all():
+                                f_hit = f
+                                break
+                        f = f_end if f_hit is None else f_hit
+                        early[(thr, S)].append(rec(f, f_hit is not None and f_hit < f_end))
+
+    def summarize(r):
+        yy = np.array([q["y"] for q in r]); pr = np.array([q["pred"] for q in r]); vv = np.array([q["vis"] for q in r])
+        lat = np.array([q["lat"] for q in r])
+        out = PAY[np.array([COUNTER[int(a)] for a in pr]), yy]
+        wdl = [100 * np.mean(out == v) for v in (1, 0, -1)]
+        clear = vv >= 0
+        outv = PAY[np.array([COUNTER[int(a)] for a in pr[clear]]), vv[clear]] if clear.any() else np.array([])
+        wv = [100 * np.mean(outv == v) if len(outv) else float("nan") for v in (1, 0, -1)]
+        acc_v = 100 * np.mean(pr[clear] == vv[clear]) if clear.any() else float("nan")
+        return yy, pr, lat, wdl, wv, acc_v, int(clear.sum()) // reps_eff
+
+    print(f"\n12. DO TUNG MOC CHO (KE TU LUC TAY VAO O) VA LUAT THOAT SOM")
+    print("   Moc 0 = ngay khung tay vao o. j khung ~ j x " + f"{median_dt_ms:.0f} ms. T/H/T = may thang/hoa/thua (%).")
+    print("\n   A. Chot co dinh o +j khung sau luc vao o (j = 0..9; day du, gom ca +1, +2, +4, +5)")
+    print(f"   {'khung':>5} {'ms':>5}   {'dung y dinh':>12} {'T/H/T vs y dinh':>18}   {'dung hinh thay':>15} {'T/H/T vs hinh thay':>20} {'n ro':>5}")
+    for j in DENSE_J:
+        yy, pr, lat, wdl, wv, acc_v, nclear = summarize(dense[j])
+        print(f"   {j:>+5d} {np.median(lat):>5.0f}   {100 * np.mean(pr == yy):>11.1f}% {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   "
+              f"{acc_v:>14.1f}% {wv[0]:>8.1f}/{wv[1]:>4.1f}/{wv[2]:>4.1f} {nclear:>5}")
+    print(f"\n   B. Luat thoat som: tu khung vao o, chot ngay khi xac suat cao nhat >= nguong va CUNG MOT cu chi o S khung lien tiep;")
+    print(f"      khong thi cho du {W} khung. 'som%' = ti le van thoat som; 'dung(som)' = do chinh xac cua RIENG cac van thoat som.")
+    print(f"   {'cach':<20} {'tre p50':>8} {'p90':>6} {'max':>6} {'som%':>6} {'dung(som)':>10}   {'dung y dinh':>12} {'T/H/T vs y dinh':>18}"
+          f"   {'dung hinh thay':>15} {'T/H/T vs hinh thay':>20}")
+    base = summarize(dense[min(W, max(DENSE_J))] if W <= max(DENSE_J) else dense[max(DENSE_J)])
+    yy, pr, lat, wdl, wv, acc_v, nclear = base
+    print(f"   {'co dinh +' + str(W):<20} {np.percentile(lat, 50):>8.0f} {np.percentile(lat, 90):>6.0f} {lat.max():>6.0f} {'-':>6} {'-':>10}   "
+          f"{100 * np.mean(pr == yy):>11.1f}% {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   {acc_v:>14.1f}% {wv[0]:>8.1f}/{wv[1]:>4.1f}/{wv[2]:>4.1f}")
+    for thr in EE_THRS:
+        for S in EE_PERSIST:
+            r = early[(thr, S)]
+            yy, pr, lat, wdl, wv, acc_v, nclear = summarize(r)
+            em = np.array([q["early"] for q in r])
+            acc_e = 100 * np.mean((pr == yy)[em]) if em.any() else float("nan")
+            et = f"{acc_e:>9.1f}%" if acc_e == acc_e else f"{'-':>10}"
+            print(f"   {f'nguong {thr:.2f}, S={S}':<20} {np.percentile(lat, 50):>8.0f} {np.percentile(lat, 90):>6.0f} {lat.max():>6.0f} "
+                  f"{100 * em.mean():>5.0f}% {et}   {100 * np.mean(pr == yy):>11.1f}% {wdl[0]:>6.1f}/{wdl[1]:>4.1f}/{wdl[2]:>4.1f}   "
+                  f"{acc_v:>14.1f}% {wv[0]:>8.1f}/{wv[1]:>4.1f}/{wv[2]:>4.1f}")
+    print("   Doc: luat thoat som chi dang dung khi (1) 'dung(som)' cao (cac van thoat som that su chac), (2) 'tre p50' giam ro")
+    print("   so voi co dinh, va (3) toan bo do chinh xac / so van thua khong te hon co dinh qua sai so.")
+    print(f"   Luu y: sai so ngau nhien khoang +-{noise_pts(len(y)):.1f} diem % (do tin cay ~95%); van thua rat it nen cang lon sai so.")
+
+
 # ------------------------------------------------------------------ chạy
 def main():
     global EXT_HI, EXT_LO
@@ -1119,6 +1212,7 @@ def main():
             formation_experiment(prepared, args.reps, cv_mode, rule_match)
             wait_policy_experiment(prepared, args.reps, cv_mode, args.wait_frames, median_dt_ms)
             extend_policy_experiment(prepared, args.reps, cv_mode, args.wait_frames, median_dt_ms)
+            early_exit_experiment(prepared, args.reps, cv_mode, args.wait_frames, median_dt_ms)
 
     seqs = [q for q in (prepare_seq(r) for r in rounds) if q is not None]
     onset_experiment(seqs, args.reps, cv_mode)
