@@ -1,0 +1,2 @@
+# demo_v2 dùng đúng các thư viện của demo/ (numpy, opencv, mediapipe, torch), nên chỉ cần nạp lại file đó.
+-r ../demo/requirements.txt
