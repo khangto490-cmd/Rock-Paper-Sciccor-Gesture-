@@ -846,7 +846,9 @@ with mp_hands.Hands(
                 )
                 if len(capture_buffer) == CAPTURE_BUFFER_FRAMES:
                     # Freeze an exact-length snapshot. No partial capture is sent to GRU.
-                    frozen_capture = tuple(capture_buffer)
+                    frozen_capture = tuple(
+                        frame.copy() for frame in capture_buffer
+                    )
                     print(
                         f"[CAPTURE] Complete fixed window: "
                         f"{len(frozen_capture)}/{CAPTURE_BUFFER_FRAMES} frames."
@@ -1083,10 +1085,12 @@ with mp_hands.Hands(
             cv2.LINE_AA,
         )
 
-        cv2.imshow(
-            "Tiny GRU RPS - Fair Play Zone V7.6",
-            display,
-        )
+        WINDOW_NAME = "Tiny GRU RPS - Fair Play Zone V7.6"
+
+        cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(WINDOW_NAME, 960, 720)
+
+        cv2.imshow(WINDOW_NAME, display)
 
         key = cv2.waitKey(1) & 0xFF
 
