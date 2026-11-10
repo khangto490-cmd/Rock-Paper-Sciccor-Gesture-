@@ -3,7 +3,7 @@
 Hệ thống dự đoán cử chỉ **kéo / búa / bao** của người chơi ngay **trong lúc tay đang ra**, từ webcam hoặc file video, để máy có thể ra cử chỉ khắc chế.
 
 > Thư mục này (`Sang/`, nhánh `Sang`) nằm trong repo `Rock-Paper-Sciccor-Gesture-`.
-> Chi tiết quá trình làm, thử nghiệm và kết luận: xem [`NOTES.md`](NOTES.md). Hướng dẫn chạy demo: xem [`demo/RUN.md`](demo/RUN.md). Hướng dẫn chạy game: xem [`game_ab/RUN.md`](game_ab/RUN.md).
+> Chi tiết quá trình làm, thử nghiệm và kết luận: xem [`NOTES.md`](NOTES.md). **Game hoàn chỉnh (có giao diện, luật chơi): xem [`game_ab/RUN.md`](game_ab/RUN.md).** Bản demo cũ chỉ để kiểm tra mô hình: xem [`demo/RUN.md`](demo/RUN.md).
 
 ## 1. Tóm tắt
 
@@ -39,12 +39,17 @@ Hệ thống dự đoán cử chỉ **kéo / búa / bao** của người chơi n
 
 ### Trạng thái hiện tại và hướng phát triển
 
-Dự án có hai phần chạy được: `demo/` (kiểm tra mô hình: hiển thị khung xương tay, nhãn kèm độ tin cậy và FPS) và `game_ab/` (game chơi trên giao diện web bằng webcam, xem mục 3). Các hướng đang cải tiến, tối ưu và nâng cấp:
+Dự án có hai phần chạy được:
+
+- **`game_ab/` (bản hoàn chỉnh, mới):** game chơi trên giao diện web bằng webcam, luật A -> B, máy đoán sớm cử chỉ của người chơi, chốt đáp án và ra cử chỉ khắc chế, có kết quả từng ván và tính điểm (người chơi / máy / hòa). Tự dùng GPU nếu có, không thì chạy CPU.
+- **`demo/` (bản cũ):** chỉ hiển thị khung xương tay, nhãn kèm độ tin cậy và FPS để kiểm tra mô hình. Không có giao diện chơi.
+
+Các hướng đang cải tiến, tối ưu và nâng cấp:
 
 - **Nhận diện nhanh hơn, đoán sớm hơn:** mô hình dự đoán trên từng khung hình và được đánh giá bằng thời điểm đoán đúng đầu tiên (ms). Đã thử làm mượt kết quả webcam để nhãn ít nhảy trong lúc tay đang ra, nhưng bỏ vì độ chính xác giảm, đoán đúng chậm hơn và webcam không thấy khác biệt.
 - **Nhận đúng ở mọi góc tay:** đã cải thiện bằng Data Augmentation (xoay 3D, lật gương, nhiễu), bản xoay góc rộng hơn và đặc trưng khoảng cách giữa các khớp (khoảng cách không đổi khi xoay tay). Sau khi thêm dữ liệu bonus, cấu hình có đặc trưng khoảng cách gần như không giảm khi xoay giả lập đến 60°. Khi tay nghiêng mạnh (khoảng 45° trở lên) trên webcam thật vẫn còn nhận sai, nên đây vẫn là hướng cải tiến chính.
 - **Mở rộng dữ liệu:** đã thêm `Dataset_bonus` (90 video quay bằng điện thoại) và train lại. Việc tiếp theo: thêm dữ liệu từ nhiều người chơi và camera khác để kiểm tra khả năng tổng quát.
-- **Giao diện chơi (máy ra cử chỉ khắc chế):** đã có trong `game_ab/` (luật A -> B, giao diện web, chạy bằng GPU hoặc CPU). Cách chạy: [`game_ab/RUN.md`](game_ab/RUN.md).
+- **Giao diện chơi (máy ra cử chỉ khắc chế):** đã hoàn thành trong `game_ab/` (giao diện web, luật chơi A -> B, tính điểm). Cách chạy: [`game_ab/RUN.md`](game_ab/RUN.md).
 
 ## 2. Cấu trúc thư mục
 
@@ -54,15 +59,7 @@ Sang/
 ├── NOTES.md              # nhật ký: đã làm gì, thử nghiệm, kết luận, việc còn lại
 ├── requirements.txt      # thư viện cho các notebook trong Data_321 (môi trường train)
 ├── requirements-lock.txt # danh sách đầy đủ phiên bản thư viện của môi trường train (pip freeze)
-├── demo/                 # demo webcam / video, CHẠY ĐƯỢC (xem demo/RUN.md)
-│   ├── demo.py           # giao diện và vòng lặp webcam / video
-│   ├── model.py          # kiến trúc TCN, nạp checkpoint
-│   ├── features.py       # nội suy lên 120 fps, dựng 546 đặc trưng
-│   ├── requirements.txt  # thư viện của demo
-│   ├── RUN.md            # hướng dẫn chạy
-│   ├── TCN.pt            # checkpoint mô hình đang dùng
-│   └── hand_landmarker.task  # model MediaPipe nhận diện bàn tay
-├── game_ab/              # game chơi trên giao diện web, CHẠY ĐƯỢC (xem game_ab/RUN.md)
+├── game_ab/              # GAME HOÀN CHỈNH: giao diện web, luật A -> B (xem game_ab/RUN.md)
 │   ├── server.py         # server, mở webcam, nối giao diện web với game
 │   ├── detector.py       # MediaPipe + model nhận diện cử chỉ (GPU hoặc CPU)
 │   ├── game_logic.py     # luật chơi A -> B
@@ -71,6 +68,14 @@ Sang/
 │   ├── RUN.md            # hướng dẫn chạy
 │   ├── TCN.pt            # checkpoint mô hình đang dùng
 │   └── web/              # giao diện web
+├── demo/                 # BẢN CŨ: demo webcam / video để kiểm tra mô hình (xem demo/RUN.md)
+│   ├── demo.py           # giao diện và vòng lặp webcam / video
+│   ├── model.py          # kiến trúc TCN, nạp checkpoint
+│   ├── features.py       # nội suy lên 120 fps, dựng 546 đặc trưng
+│   ├── requirements.txt  # thư viện của demo
+│   ├── RUN.md            # hướng dẫn chạy
+│   ├── TCN.pt            # checkpoint mô hình đang dùng
+│   └── hand_landmarker.task  # model MediaPipe nhận diện bàn tay
 └── Data_321/             # notebook, bảng danh sách video, checkpoint trong quá trình nghiên cứu
     ├── 01_PrepareData.ipynb ... 19_Task9_Train.ipynb   # đánh số theo thứ tự thực hiện; vai trò từng notebook: NOTES.md, mục 4
     ├── manifest.csv          # danh sách 215 video đầu (2 nguồn đầu)
@@ -81,9 +86,25 @@ Sang/
         └── step2/seed0..seed3 (TCN.pt), train_summary.csv, compare_task9.csv, final_model.json
 ```
 
-## 3. Chạy demo
+## 3. Chạy game và demo
 
-Demo không cần tải dataset. Làm theo [`demo/RUN.md`](demo/RUN.md). Tóm tắt:
+### 3.1. Game `game_ab/` (bản hoàn chỉnh)
+
+Không cần tải dataset. Làm theo [`game_ab/RUN.md`](game_ab/RUN.md). Tóm tắt:
+
+```
+cd Sang/game_ab
+python -m venv venv
+venv\Scripts\activate
+python -m pip install -r requirements.txt
+python server.py
+```
+
+Rồi mở trình duyệt vào http://127.0.0.1:8000 để chơi. Máy có GPU NVIDIA thì tự dùng GPU, không có thì tự chạy CPU.
+
+### 3.2. Demo cũ `demo/`
+
+Chỉ để kiểm tra mô hình. Không cần tải dataset. Làm theo [`demo/RUN.md`](demo/RUN.md). Tóm tắt:
 
 ```
 cd Sang/demo
@@ -97,8 +118,6 @@ python demo.py --video clip.mp4   # file video
 
 Ngưỡng tin cậy hiển thị mặc định là 0.60, đổi bằng phím `[` `]` hoặc tùy chọn `--threshold`.
 
-Muốn chơi game trên giao diện web: làm theo [`game_ab/RUN.md`](game_ab/RUN.md).
-
 ## 4. Lưu ý về thư mục `Data_321/`
 
 Các notebook trong `Data_321/` là **notebook nghiên cứu, chạy riêng trên máy cá nhân** (Windows, GPU NVIDIA RTX 3050 Ti, môi trường `train-gpu`). **Người khác không chạy lại được các notebook này từ repo**, vì chúng đọc dữ liệu và file nằm ngoài repo, trong thư mục `~/Downloads/Data_321` của máy train:
@@ -107,7 +126,7 @@ Các notebook trong `Data_321/` là **notebook nghiên cứu, chạy riêng trê
 - file `hand_landmarker.task` của MediaPipe;
 - GPU có CUDA (notebook dừng nếu không có CUDA, không train bằng CPU).
 
-Vì vậy, để xem kết quả hãy đọc **output đã lưu trong notebook** (ví dụ `13_Task8_Step2.ipynb`, `19_Task9_Train.ipynb`) và các bảng tổng hợp trong `NOTES.md`. Phần có thể chạy lại độc lập là `demo/`.
+Vì vậy, để xem kết quả hãy đọc **output đã lưu trong notebook** (ví dụ `13_Task8_Step2.ipynb`, `19_Task9_Train.ipynb`) và các bảng tổng hợp trong `NOTES.md`. Phần có thể chạy lại độc lập là `game_ab/` và `demo/`.
 
 Danh sách và vai trò từng notebook: `NOTES.md`, mục 4.
 
@@ -152,6 +171,6 @@ Ba cấu hình TCN đã được so sánh, mỗi cấu hình train với 4 seed 
 ## 7. Môi trường
 
 - Máy train: Windows, RTX 3050 Ti Laptop GPU (4 GB VRAM), RAM 15,7 GB. Thư viện chính: `torch 2.6.0+cu124`, `mediapipe 1.1.0`, `numpy 2.5.2`, `opencv-contrib-python 5.0.0.93`. Danh sách đầy đủ: [`requirements.txt`](requirements.txt) và [`requirements-lock.txt`](requirements-lock.txt).
-- Demo: Python 3.13 (đã chạy thử với 3.13.5), CPU hoặc GPU. Thư viện của demo: `demo/requirements.txt`, cài bằng `python -m pip install -r requirements.txt`.
 - Game (`game_ab/`): Windows, tự dùng GPU nếu PyTorch nhận được CUDA, không thì chạy CPU. Thư viện: `game_ab/requirements.txt`.
+- Demo cũ: Python 3.13 (đã chạy thử với 3.13.5), CPU hoặc GPU. Thư viện của demo: `demo/requirements.txt`, cài bằng `python -m pip install -r requirements.txt`.
 - MediaPipe cài bằng pip không bật được GPU, nên bước trích landmark và demo luôn chạy MediaPipe bằng CPU.
