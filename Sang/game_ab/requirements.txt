@@ -7,4 +7,5 @@ opencv-contrib-python
 torch>=2.6.0
 
 # Web server
+fastapi>=0.115.0
 uvicorn>=0.30.0
