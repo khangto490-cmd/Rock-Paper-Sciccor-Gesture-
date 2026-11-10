@@ -7,32 +7,32 @@ from pathlib import Path
 import numpy as np, torch, cv2
 import torch.nn as nn, torch.nn.functional as F
 import mediapipe as mp
-
-BASE = Path.home() / "Downloads" / "Data_321"
-TASK = BASE / "hand_landmarker.task"
-CKPT = BASE / "checkpoints_task9" / "step2" / "seed1" / "TCN.pt"      # step2 s1
+ 
+HERE = Path(__file__).parent                                          # thư mục chứa detector.py (game_ab)
+TASK = HERE.parent / "demo" / "hand_landmarker.task"                  # file nằm trong thư mục demo của repo
+CKPT = HERE / "TCN.pt"                                                # step2 s1, nằm ngay trong game_ab
 FPS_MODEL, WIN = 120, 80                                              # WIN phải >= 64 (tầm nhìn của TCN là 63 khung)
-
-
+ 
+ 
 class Block(nn.Module):
     def __init__(self, c, d):
         super().__init__(); self.pad = 2 * d
         self.conv = nn.Conv1d(c, c, 3, dilation=d); self.drop = nn.Dropout(0.1)
-
+ 
     def forward(self, x):
         return x + self.drop(F.relu(self.conv(F.pad(x, (self.pad, 0)))))
-
-
+ 
+ 
 class TCN(nn.Module):
     def __init__(self, in_features=126, c=64):
         super().__init__(); self.inp = nn.Linear(in_features, c)
         self.blocks = nn.Sequential(*[Block(c, d) for d in (1, 2, 4, 8, 16)])
         self.out = nn.Linear(c, 3)
-
+ 
     def forward(self, x):
         return self.out(self.blocks(self.inp(x).transpose(1, 2)).transpose(1, 2))
-
-
+ 
+ 
 class Detector:
     def __init__(self):
         for p in (TASK, CKPT):
@@ -53,10 +53,10 @@ class Detector:
         self.buf = collections.deque(maxlen=WIN)
         self.prev_lm = self.prev_t = None
         self.ms = (0.0, 0.0)                                                          # (MediaPipe, nội suy + model) của khung vừa xử lý, đơn vị ms
-
+ 
     def close(self):
         self.landmarker.close()
-
+ 
     # ---------- đặc trưng ----------
     def _features_from_pos(self, pos, hand_mask):
         """pos (b,T,21,3) -> (b,T,546): 126 gốc + 210 khoảng cách + 210 vận tốc khoảng cách."""
@@ -68,10 +68,10 @@ class Detector:
         dist = torch.linalg.vector_norm(pos[:, :, self.pi] - pos[:, :, self.pj], dim=-1) * hand_mask[:, :, None]
         dvel = torch.zeros_like(dist); dvel[:, 1:] = (dist[:, 1:] - dist[:, :-1]) * pv
         return torch.cat([flat, vel, dist, dvel], dim=-1)
-
+ 
     def _geo_from_base(self, X, hand_mask):
         return self._features_from_pos(X[..., :63].reshape(X.shape[0], X.shape[1], 21, 3), hand_mask)
-
+ 
     @staticmethod
     def _base_features(lm):
         has = ~np.isnan(lm[:, 0, 0])
@@ -83,7 +83,7 @@ class Detector:
         if len(pos) > 1:
             vel[1:] = (pos[1:] - pos[:-1]) * (has[1:] & has[:-1])[:, None]
         return np.hstack([pos, vel]).astype(np.float32), has
-
+ 
     # ---------- webcam -> landmark -> xác suất ----------
     def _detect(self, frame_bgr, now):
         ts = max(int((now - self.t0) * 1000), self.last_ts + 1)                       # timestamp MediaPipe phải luôn tăng
@@ -93,7 +93,7 @@ class Detector:
         if not res.hand_landmarks:
             return None
         return np.array([[p.x, p.y, p.z] for p in res.hand_landmarks[0]], np.float32)
-
+ 
     def _push(self, lm, t):
         prev, pt = self.prev_lm, self.prev_t
         n = 1 if pt is None else max(1, round((t - pt) * FPS_MODEL))                  # nội suy tuyến tính lên 120 fps
@@ -104,7 +104,7 @@ class Detector:
         else:
             self.buf.extend(prev + (lm - prev) * (k / n) for k in range(1, n + 1))
         self.prev_lm, self.prev_t = lm, t
-
+ 
     def _probs(self):
         """Xác suất (paper, rock, scissors) của khung cuối."""
         lm = np.stack(self.buf)
@@ -112,7 +112,7 @@ class Detector:
         xb, mb = torch.from_numpy(base)[None].to(self.dev), torch.from_numpy(has)[None].to(self.dev)
         with torch.no_grad():
             return self.net(self._geo_from_base(xb, mb)).softmax(-1)[0, -1].cpu().numpy()
-
+ 
     def process(self, frame_bgr, now):
         """Trả (lm, probs): lm (21,3) hoặc None nếu không thấy tay; probs (3,) hoặc None."""
         a = time.perf_counter()
@@ -123,3 +123,4 @@ class Detector:
         c = time.perf_counter()
         self.ms = (1000 * (b - a), 1000 * (c - b))
         return lm, probs
+ 
