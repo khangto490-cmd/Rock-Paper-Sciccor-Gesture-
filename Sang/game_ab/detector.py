@@ -35,10 +35,10 @@ class TCN(nn.Module):
 
 class Detector:
     def __init__(self):
-        assert torch.cuda.is_available(), "Chưa bật CUDA; không chạy trên CPU."
         for p in (TASK, CKPT):
             assert p.exists(), f"Không thấy: {p}"
-        self.dev = "cuda"
+        self.dev = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"Đang chạy trên: {self.dev.upper()}")
         self.pi, self.pj = torch.triu_indices(21, 21, offset=1, device=self.dev)      # 210 cặp khớp
         self.net = TCN(in_features=546).to(self.dev)
         ck = torch.load(CKPT, map_location=self.dev, weights_only=False)
