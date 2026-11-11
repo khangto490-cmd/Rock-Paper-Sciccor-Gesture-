@@ -1,0 +1,132 @@
+{
+  "bat_dau": "20261110_164143_nb25",
+  "camera": 0,
+  "thiet_bi_model": "cuda",
+  "notebook": "25_GameAB_v2 (cell 10 đến 12)",
+  "tham_so_luat": {
+    "pre_sec": 0.1,
+    "confirm_sec": 0.2,
+    "hold_a": 0.3,
+    "gate_f": 0.25,
+    "box_r": 0.13,
+    "band": 0.09
+  },
+  "ke_hoach": {
+    "so_van": 50,
+    "seed": 42,
+    "chuoi": [
+      "rock",
+      "scissors",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "rock",
+      "rock",
+      "scissors",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "rock"
+    ]
+  },
+  "tong_ket_game": {
+    "so_van": 0,
+    "hop_le": 0,
+    "doi_tay": 0,
+    "khong_xac_dinh": 0,
+    "ty_le_huy": null,
+    "ty_le_khong_xac_dinh": null,
+    "do_phu": null,
+    "ai_doan_dung_luc_chot": null,
+    "so_van_do_ai": 0,
+    "ai_thang": 0,
+    "nguoi_thang": 0,
+    "hoa": 0
+  },
+  "diem": {
+    "ai": 0,
+    "player": 0,
+    "draw": 0
+  },
+  "thong_ke_van": {
+    "ok": 0,
+    "switch": 0,
+    "unknown": 0
+  },
+  "thong_ke_ke_hoach": {
+    "so_van_theo_ke_hoach": 0,
+    "guess_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "tay_luc_chot_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "tay_sau_chot_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "guess_dung_ke_hoach_lop_paper": {
+      "dung": 0,
+      "tren": 0
+    },
+    "guess_dung_ke_hoach_lop_rock": {
+      "dung": 0,
+      "tren": 0
+    },
+    "guess_dung_ke_hoach_lop_scissors": {
+      "dung": 0,
+      "tren": 0
+    }
+  },
+  "thoi_gian": {
+    "ghi_chu": "không đủ khung sau 10 giây đầu",
+    "so_khung_tong": 41
+  },
+  "luu_y": "Một người chơi, một camera, một phiên, chạy trong notebook 25 (đọc camera trực tiếp bằng cap.read, không luồng Grabber, không phải demo_v2.py). Tỷ lệ huỷ và độ chính xác lúc chốt tính trên mọi ván đã chốt. Độ trễ đo từ sau cap.read tới sau waitKey, chưa gồm trễ nội bộ của camera. Không dùng tỷ lệ thắng làm bằng chứng hiệu quả."
+}

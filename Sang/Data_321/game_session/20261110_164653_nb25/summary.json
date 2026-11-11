@@ -1,0 +1,216 @@
+{
+  "bat_dau": "20261110_164653_nb25",
+  "camera": 0,
+  "thiet_bi_model": "cuda",
+  "notebook": "25_GameAB_v2 (cell 10 đến 12)",
+  "tham_so_luat": {
+    "pre_sec": 0.1,
+    "confirm_sec": 0.2,
+    "hold_a": 0.3,
+    "gate_f": 0.25,
+    "box_r": 0.13,
+    "band": 0.09
+  },
+  "ke_hoach": {
+    "so_van": 50,
+    "seed": 42,
+    "chuoi": [
+      "rock",
+      "scissors",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "rock",
+      "rock",
+      "scissors",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "rock"
+    ]
+  },
+  "tong_ket_game": {
+    "so_van": 50,
+    "hop_le": 47,
+    "doi_tay": 3,
+    "khong_xac_dinh": 0,
+    "ty_le_huy": 0.06,
+    "ty_le_khong_xac_dinh": 0.0,
+    "do_phu": 0.94,
+    "ai_doan_dung_luc_chot": 0.94,
+    "so_van_do_ai": 50,
+    "ai_thang": 47,
+    "nguoi_thang": 0,
+    "hoa": 0
+  },
+  "diem": {
+    "ai": 47,
+    "player": 0,
+    "draw": 0
+  },
+  "thong_ke_van": {
+    "ok": 47,
+    "switch": 3,
+    "unknown": 0
+  },
+  "thong_ke_ke_hoach": {
+    "so_van_theo_ke_hoach": 50,
+    "guess_dung_ke_hoach": {
+      "dung": 50,
+      "tren": 50,
+      "ty_le_%": 100.0,
+      "wilson95_%": [
+        92.9,
+        100.0
+      ]
+    },
+    "tay_luc_chot_dung_ke_hoach": {
+      "dung": 47,
+      "tren": 50,
+      "ty_le_%": 94.0,
+      "wilson95_%": [
+        83.8,
+        97.9
+      ]
+    },
+    "tay_sau_chot_dung_ke_hoach": {
+      "dung": 50,
+      "tren": 50,
+      "ty_le_%": 100.0,
+      "wilson95_%": [
+        92.9,
+        100.0
+      ]
+    },
+    "guess_dung_ke_hoach_lop_paper": {
+      "dung": 17,
+      "tren": 17
+    },
+    "guess_dung_ke_hoach_lop_rock": {
+      "dung": 17,
+      "tren": 17
+    },
+    "guess_dung_ke_hoach_lop_scissors": {
+      "dung": 16,
+      "tren": 16
+    }
+  },
+  "thoi_gian": {
+    "bo_qua_giay_dau": 10.0,
+    "so_khung_tong": 3589,
+    "so_khung_do": 3301,
+    "thoi_gian_do_s": 110.19,
+    "fps_theo_khung_chia_thoi_gian": 29.95,
+    "ty_le_khung_co_tay_%": 90.91,
+    "cam_doc_ms": {
+      "n": 3301,
+      "mean": 14.281,
+      "median": 13.513,
+      "p95": 28.346,
+      "max": 83.572
+    },
+    "process_ms": {
+      "n": 3301,
+      "mean": 15.459,
+      "median": 14.948,
+      "p95": 22.83,
+      "max": 30.547
+    },
+    "logic_ms": {
+      "n": 3301,
+      "mean": 0.214,
+      "median": 0.195,
+      "p95": 0.476,
+      "max": 1.299
+    },
+    "ve_va_hien_ms": {
+      "n": 3301,
+      "mean": 1.41,
+      "median": 1.292,
+      "p95": 2.06,
+      "max": 5.905
+    },
+    "tre_sau_doc_den_hien_ms": {
+      "n": 3301,
+      "mean": 19.108,
+      "median": 18.602,
+      "p95": 26.521,
+      "max": 35.063
+    },
+    "vong_lap_ms": {
+      "n": 3301,
+      "mean": 33.389,
+      "median": 32.141,
+      "p95": 47.654,
+      "max": 102.766
+    },
+    "process_ms_co_tay": {
+      "n": 3001,
+      "mean": 15.58,
+      "median": 14.978,
+      "p95": 23.335,
+      "max": 30.547
+    },
+    "tre_sau_doc_den_hien_ms_co_tay": {
+      "n": 3001,
+      "mean": 19.265,
+      "median": 18.649,
+      "p95": 27.17,
+      "max": 35.063
+    },
+    "process_ms_khong_tay": {
+      "n": 300,
+      "mean": 14.252,
+      "median": 11.119,
+      "p95": 21.507,
+      "max": 25.614
+    },
+    "tre_sau_doc_den_hien_ms_khong_tay": {
+      "n": 300,
+      "mean": 17.542,
+      "median": 14.374,
+      "p95": 25.314,
+      "max": 29.238
+    },
+    "fps_theo_vong_lap": 29.95
+  },
+  "luu_y": "Một người chơi, một camera, một phiên, chạy trong notebook 25 (đọc camera trực tiếp bằng cap.read, không luồng Grabber, không phải demo_v2.py). Tỷ lệ huỷ và độ chính xác lúc chốt tính trên mọi ván đã chốt. Độ trễ đo từ sau cap.read tới sau waitKey, chưa gồm trễ nội bộ của camera. Không dùng tỷ lệ thắng làm bằng chứng hiệu quả."
+}

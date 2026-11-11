@@ -1,0 +1,195 @@
+{
+  "bat_dau": "20261110_164046_nb25",
+  "camera": 0,
+  "thiet_bi_model": "cuda",
+  "notebook": "25_GameAB_v2 (cell 10 đến 12)",
+  "tham_so_luat": {
+    "pre_sec": 0.1,
+    "confirm_sec": 0.2,
+    "hold_a": 0.3,
+    "gate_f": 0.25,
+    "box_r": 0.13,
+    "band": 0.09
+  },
+  "ke_hoach": {
+    "so_van": 50,
+    "seed": 42,
+    "chuoi": [
+      "rock",
+      "scissors",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "paper",
+      "paper",
+      "paper",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "rock",
+      "rock",
+      "scissors",
+      "scissors",
+      "paper",
+      "rock",
+      "scissors",
+      "rock",
+      "paper",
+      "scissors",
+      "scissors",
+      "paper",
+      "scissors",
+      "rock",
+      "rock",
+      "rock"
+    ]
+  },
+  "tong_ket_game": {
+    "so_van": 0,
+    "hop_le": 0,
+    "doi_tay": 0,
+    "khong_xac_dinh": 0,
+    "ty_le_huy": null,
+    "ty_le_khong_xac_dinh": null,
+    "do_phu": null,
+    "ai_doan_dung_luc_chot": null,
+    "so_van_do_ai": 0,
+    "ai_thang": 0,
+    "nguoi_thang": 0,
+    "hoa": 0
+  },
+  "diem": {
+    "ai": 0,
+    "player": 0,
+    "draw": 0
+  },
+  "thong_ke_van": {
+    "ok": 0,
+    "switch": 0,
+    "unknown": 0
+  },
+  "thong_ke_ke_hoach": {
+    "so_van_theo_ke_hoach": 0,
+    "guess_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "tay_luc_chot_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "tay_sau_chot_dung_ke_hoach": {
+      "dung": 0,
+      "tren": 0,
+      "ty_le_%": null,
+      "wilson95_%": null
+    },
+    "guess_dung_ke_hoach_lop_paper": {
+      "dung": 0,
+      "tren": 0
+    },
+    "guess_dung_ke_hoach_lop_rock": {
+      "dung": 0,
+      "tren": 0
+    },
+    "guess_dung_ke_hoach_lop_scissors": {
+      "dung": 0,
+      "tren": 0
+    }
+  },
+  "thoi_gian": {
+    "bo_qua_giay_dau": 10.0,
+    "so_khung_tong": 516,
+    "so_khung_do": 224,
+    "thoi_gian_do_s": 7.51,
+    "fps_theo_khung_chia_thoi_gian": 29.71,
+    "ty_le_khung_co_tay_%": 0.0,
+    "cam_doc_ms": {
+      "n": 224,
+      "mean": 18.806,
+      "median": 18.215,
+      "p95": 31.87,
+      "max": 79.779
+    },
+    "process_ms": {
+      "n": 224,
+      "mean": 11.263,
+      "median": 10.91,
+      "p95": 14.265,
+      "max": 20.563
+    },
+    "logic_ms": {
+      "n": 224,
+      "mean": 0.005,
+      "median": 0.004,
+      "p95": 0.007,
+      "max": 0.019
+    },
+    "ve_va_hien_ms": {
+      "n": 224,
+      "mean": 1.177,
+      "median": 1.07,
+      "p95": 1.547,
+      "max": 15.157
+    },
+    "tre_sau_doc_den_hien_ms": {
+      "n": 224,
+      "mean": 14.837,
+      "median": 13.984,
+      "p95": 19.249,
+      "max": 92.804
+    },
+    "vong_lap_ms": {
+      "n": 224,
+      "mean": 33.643,
+      "median": 32.169,
+      "p95": 45.386,
+      "max": 112.509
+    },
+    "process_ms_co_tay": null,
+    "tre_sau_doc_den_hien_ms_co_tay": null,
+    "process_ms_khong_tay": {
+      "n": 224,
+      "mean": 11.263,
+      "median": 10.91,
+      "p95": 14.265,
+      "max": 20.563
+    },
+    "tre_sau_doc_den_hien_ms_khong_tay": {
+      "n": 224,
+      "mean": 14.837,
+      "median": 13.984,
+      "p95": 19.249,
+      "max": 92.804
+    },
+    "fps_theo_vong_lap": 29.72
+  },
+  "luu_y": "Một người chơi, một camera, một phiên, chạy trong notebook 25 (đọc camera trực tiếp bằng cap.read, không luồng Grabber, không phải demo_v2.py). Tỷ lệ huỷ và độ chính xác lúc chốt tính trên mọi ván đã chốt. Độ trễ đo từ sau cap.read tới sau waitKey, chưa gồm trễ nội bộ của camera. Không dùng tỷ lệ thắng làm bằng chứng hiệu quả."
+}
