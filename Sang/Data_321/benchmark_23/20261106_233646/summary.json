@@ -1,0 +1,164 @@
+{
+  "checkpoint": "C:\\Users\\Acer Nitro 5 Tiger\\Downloads\\Data_321\\checkpoints_task9\\step2\\seed1\\TCN.pt",
+  "model": "TCN step2 seed 1",
+  "input_features": 546,
+  "parameters": 96963,
+  "checkpoint_size_mb": 0.3754615783691406,
+  "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+  "camera_requested": {
+    "id": 0,
+    "width": 640,
+    "height": 480,
+    "fps": 30
+  },
+  "run_seconds": 115.6641,
+  "warmup_seconds_excluded": 10,
+  "frames_total": 3431,
+  "frames_measured": 3147,
+  "hand_frame_percent": 39.307276771528436,
+  "processing_fps_from_loop": 29.825052978610533,
+  "pipeline_latency_ms": {
+    "camera_read_ms": {
+      "mean": 18.922415792622136,
+      "median": 18.523499951697886,
+      "p95": 34.072779992129654,
+      "max": 115.91870000120252
+    },
+    "mediapipe_ms": {
+      "mean": 11.086210327080597,
+      "median": 9.913899935781956,
+      "p95": 18.519189953804016,
+      "max": 20.952100050635636
+    },
+    "interpolation_ms": {
+      "mean": 0.03610152548784523,
+      "median": 0.03330002073198557,
+      "p95": 0.04880002234131098,
+      "max": 0.25699997786432505
+    },
+    "feature_cpu_ms": {
+      "mean": 0.22063702559467516,
+      "median": 0.2036999212577939,
+      "p95": 0.3221000079065563,
+      "max": 0.7116999477148056
+    },
+    "host_to_gpu_ms": {
+      "mean": 0.49811293387585287,
+      "median": 0.48669998068362474,
+      "p95": 0.6652599666267633,
+      "max": 1.333800028078258
+    },
+    "geometry_gpu_ms": {
+      "mean": 0.5632675811497792,
+      "median": 0.515200081281364,
+      "p95": 0.6909599294885994,
+      "max": 34.91249994840473
+    },
+    "model_forward_ms": {
+      "mean": 1.0034423595348565,
+      "median": 0.9264999534934759,
+      "p95": 1.368479966185987,
+      "max": 1.944999909028411
+    },
+    "output_copy_ms": {
+      "mean": 0.14541883342699866,
+      "median": 0.14140002895146608,
+      "p95": 0.20818007178604606,
+      "max": 8.877299958840013
+    },
+    "hand_and_game_logic_ms": {
+      "mean": 0.053703368111407905,
+      "median": 0.0032999087125062943,
+      "p95": 0.14956997474655506,
+      "max": 0.4808000521734357
+    },
+    "pipeline_read_to_logic_ms": {
+      "mean": 31.080096122743054,
+      "median": 29.658099985681474,
+      "p95": 45.01593000022694,
+      "max": 128.3335000043735
+    },
+    "display_ms": {
+      "mean": 2.1616476971933083,
+      "median": 2.1570000099018216,
+      "p95": 2.6861099642701447,
+      "max": 3.2646000618115067
+    },
+    "full_loop_ms": {
+      "mean": 33.528859134539154,
+      "median": 32.06340002361685,
+      "p95": 47.56183001445605,
+      "max": 131.14190008491278
+    }
+  },
+  "isolated_model_benchmark": [
+    {
+      "window_frames": 63,
+      "mean_ms": 0.761012997245416,
+      "median_ms": 0.6982000195421278,
+      "p95_ms": 1.118914905237034,
+      "max_ms": 1.402700087055564,
+      "iterations": 100
+    },
+    {
+      "window_frames": 80,
+      "mean_ms": 0.6008689978625625,
+      "median_ms": 0.5711499834433198,
+      "p95_ms": 0.8446100051514802,
+      "max_ms": 0.9900999721139669,
+      "iterations": 100
+    },
+    {
+      "window_frames": 128,
+      "mean_ms": 0.6666730041615665,
+      "median_ms": 0.5939000402577221,
+      "p95_ms": 1.1178899905644355,
+      "max_ms": 1.4036999782547355,
+      "iterations": 100
+    }
+  ],
+  "rounds_completed": 1,
+  "rounds_model_correct_vs_intended": 1,
+  "rounds_with_label": 1,
+  "attempt_resets_to_A": 1,
+  "rounds_by_state": {
+    "RESULT": 1
+  },
+  "rounds_by_mode": {
+    "normal": {
+      "rounds": 1,
+      "model_correct_vs_intended": {
+        "n_labeled": 1,
+        "n_true": 1,
+        "rate_pct": 100.0
+      },
+      "confirmed_matches_intended": {
+        "n_labeled": 1,
+        "n_true": 1,
+        "rate_pct": 100.0
+      },
+      "model_matches_confirmation": {
+        "n_labeled": 1,
+        "n_true": 1,
+        "rate_pct": 100.0
+      }
+    }
+  },
+  "reset_reasons": {
+    "Lech duong! Dua BUA ve o A": 1
+  },
+  "off_path_frame_percent": 0.5084207181442644,
+  "warn_shape_frame_percent": 0.0,
+  "memory_after_live_run": {
+    "stage": "after_live_camera_run",
+    "t_s": 664383.1083496,
+    "ram_working_set_mb": 1083.4140625,
+    "ram_private_mb": 2178.53515625,
+    "ram_peak_working_set_mb": 1087.20703125,
+    "vram_torch_allocated_mb": 9.34619140625,
+    "vram_torch_reserved_mb": 24.0,
+    "vram_torch_peak_allocated_mb": 10.36669921875,
+    "vram_torch_peak_reserved_mb": 24.0
+  },
+  "interpretation": "Notebook benchmark is a one-operator measurement; report per-frame stage latencies and round counts, not a multi-user generalization claim."
+}

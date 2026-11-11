@@ -1,0 +1,4 @@
+,paper,rock,scissors,không xác định
+thật paper,16,0,0,0
+thật rock,0,14,1,1
+thật scissors,0,0,16,0

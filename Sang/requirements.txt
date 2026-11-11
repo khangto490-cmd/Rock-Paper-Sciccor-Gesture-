@@ -1,0 +1,18 @@
+# Môi trường train / notebook trong Data_321 (Windows, GPU NVIDIA, CUDA 12.4)
+# Cài: pip install -r requirements.txt
+# Ghi chú: các notebook này cần dữ liệu và GPU trên máy train nên không chạy lại được từ repo.
+#          File này ghi lại đúng môi trường đã dùng. Demo có requirements riêng: demo/requirements.txt
+# Danh sách đầy đủ (kể cả thư viện phụ thuộc): requirements-lock.txt
+
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
+mediapipe==1.1.0
+numpy==2.5.2
+opencv-contrib-python==5.0.0.93
+pandas==3.0.6
+matplotlib==3.11.2
+pillow==12.3.0
+ipykernel==7.4.0
+ipython==9.17.1
