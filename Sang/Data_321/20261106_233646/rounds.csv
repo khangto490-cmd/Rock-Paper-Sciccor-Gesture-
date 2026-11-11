@@ -1,2 +1,0 @@
-﻿round_id,mode,intended_class,model_at_B,confidence_at_B,confirmed_class,model_matches_intended,confirmed_matches_intended,model_matches_confirmed,state,outcome,time_space_to_B_s,time_GO_to_B_s,abort_count,confirmation_frames
-1,normal,paper,paper,0.914875328540802,paper,True,True,True,RESULT,ai,8.836,0.34,1,5
