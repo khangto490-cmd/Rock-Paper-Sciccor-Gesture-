@@ -1,0 +1,74 @@
+{
+ "info": {
+  "ms_chuan_bi_anh": 0.547,
+  "ms_mediapipe": 12.891,
+  "ms_doi_toa_do": 0.184,
+  "ms_tong_moi_khung": 13.621,
+  "khung": 4159,
+  "khung_cat": 4087,
+  "khung_anh_goc": 72,
+  "khung_cat_mat_tay": 5
+ },
+ "n": {
+  "tat_ca": {
+   "so_video": 48,
+   "acc_moi_khung": 85.4,
+   "ty_le_khung_khong_xd": 1.0,
+   "acc_cu_chi_cuoi_video": 95.8,
+   "f1_macro_cuoi": 96.8,
+   "video_khong_xd_cuoi": 1,
+   "video_co_it_nhat_1_khung_dung": 97.9,
+   "TB_5_nguong": 97.1
+  },
+  "Dataset_bonus": {
+   "so_video": 15,
+   "acc_moi_khung": 72.1,
+   "ty_le_khung_khong_xd": 1.1,
+   "acc_cu_chi_cuoi_video": 93.3,
+   "f1_macro_cuoi": 93.3,
+   "video_khong_xd_cuoi": 0,
+   "video_co_it_nhat_1_khung_dung": 93.3,
+   "TB_5_nguong": 93.3
+  },
+  "Dataset_hand": {
+   "so_video": 12,
+   "acc_moi_khung": 78.8,
+   "ty_le_khung_khong_xd": 2.4,
+   "acc_cu_chi_cuoi_video": 91.7,
+   "f1_macro_cuoi": 95.2,
+   "video_khong_xd_cuoi": 1,
+   "video_co_it_nhat_1_khung_dung": 100.0,
+   "TB_5_nguong": 96.7
+  },
+  "dataset_labeled": {
+   "so_video": 21,
+   "acc_moi_khung": 99.4,
+   "ty_le_khung_khong_xd": 0.0,
+   "acc_cu_chi_cuoi_video": 100.0,
+   "f1_macro_cuoi": 100.0,
+   "video_khong_xd_cuoi": 0,
+   "video_co_it_nhat_1_khung_dung": 100.0,
+   "TB_5_nguong": 100.0
+  }
+ },
+ "t50": {
+  "so_video": 48,
+  "acc_moi_khung": 91.0,
+  "ty_le_khung_khong_xd": 11.3,
+  "acc_cu_chi_cuoi_video": 95.8,
+  "f1_macro_cuoi": 96.8,
+  "video_khong_xd_cuoi": 1,
+  "video_co_it_nhat_1_khung_dung": 97.9,
+  "TB_5_nguong": 97.1
+ },
+ "t70": {
+  "so_video": 48,
+  "acc_moi_khung": 95.5,
+  "ty_le_khung_khong_xd": 20.0,
+  "acc_cu_chi_cuoi_video": 95.8,
+  "f1_macro_cuoi": 97.8,
+  "video_khong_xd_cuoi": 2,
+  "video_co_it_nhat_1_khung_dung": 97.9,
+  "TB_5_nguong": 97.1
+ }
+}
